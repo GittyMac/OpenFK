@@ -22,5 +22,29 @@ namespace OpenFK.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool customF {
+            get {
+                return ((bool)(this["customF"]));
+            }
+            set {
+                this["customF"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool RPC {
+            get {
+                return ((bool)(this["RPC"]));
+            }
+            set {
+                this["RPC"] = value;
+            }
+        }
     }
 }
