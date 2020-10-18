@@ -13,7 +13,7 @@ OpenFK adds new features while doing the same functions as the executable.
 | Mod support | |
 | Closing the game | |
 
-###Installing OpenFK
+### Installing OpenFK
 
 OpenFK requires some manual work to set it up fully. 
 
@@ -23,5 +23,5 @@ You will also need to find the Flash.ocx file, it is usually found in the `C:\Wi
 
 Be sure to check the OpenFK.exe.config file for options you can set with it. Put OpenFK.exe and its required files in the RadicaGame folder.
 
-###Building OpenFK
+### Building OpenFK
 You can build OpenFK with anything that can build dotNET 4.5 projects, like Visual Studio.
