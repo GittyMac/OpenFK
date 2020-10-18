@@ -1,5 +1,5 @@
 # OpenFK
-##### An open source replacement for the U.B. Funkeys executable.
+#### An open source replacement for the U.B. Funkeys executable.
 
 OpenFK adds new features while doing the same functions as the executable.
 
@@ -10,10 +10,11 @@ OpenFK adds new features while doing the same functions as the executable.
 | Saving files  | Checking updates  |
 | Fullscreen and Windowed mode |  ActionScript 3 Elements |
 | Basic online functionality | USB connectivity |
-| Mod support |
-| Closing the game |
+| Mod support | |
+| Closing the game | |
 
 ###Installing OpenFK
+
 OpenFK requires some manual work to set it up fully. 
 
 First, convert the RDF files in data/system and your user profile in data/YOURUSERNAME to an XML, you can do this in many ways, like using the debug logs or using an RDF converter utility. 
