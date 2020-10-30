@@ -24,4 +24,4 @@ You will also need to find the Flash.ocx file, it is usually found in the `C:\Wi
 Be sure to check the OpenFK.exe.config file for options you can set with it. Put OpenFK.exe and its required files in the RadicaGame folder.
 
 ### Building OpenFK
-You can build OpenFK with anything that can build dotNET 4.5 projects, like Visual Studio.
+You can build OpenFK with anything that can build dotNET 4.5 projects, like Visual Studio. You also need to have Flash installed to be able to use the 'Shockwave Flash Object' COM component.
