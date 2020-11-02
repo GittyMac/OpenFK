@@ -46,5 +46,29 @@ namespace OpenFK.Properties {
                 this["RPC"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int Quality {
+            get {
+                return ((int)(this["Quality"]));
+            }
+            set {
+                this["Quality"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int ScaleMode {
+            get {
+                return ((int)(this["ScaleMode"]));
+            }
+            set {
+                this["ScaleMode"] = value;
+            }
+        }
     }
 }

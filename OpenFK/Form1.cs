@@ -48,6 +48,18 @@ namespace OpenFK
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            //MegaByte (Not functional)
+
+            //Process MBRun = new Process();
+            //ProcessStartInfo MBData = new ProcessStartInfo();
+            //MBData.FileName = Directory.GetParent(Directory.GetCurrentDirectory()) + @"\MegaByte\" + "MegaByte.exe";
+            //MBData.Arguments = "-MBRun -MBDebug";
+            //MBData.RedirectStandardOutput = true;
+            //MBData.RedirectStandardInput = true;
+            //MBData.UseShellExecute = false;
+            //MBRun.StartInfo = MBData;
+            //MBRun.Start();
+
             //Checks if the main SWF exists
             if(!File.Exists(Directory.GetCurrentDirectory() + @"\Main.swf"))
             {
@@ -66,6 +78,8 @@ namespace OpenFK
             //End of RP Initialize
 
             //Flash initialization
+            AS2Container.Quality = Settings.Default.Quality;
+            AS2Container.ScaleMode = Settings.Default.ScaleMode;
             AS2Container.Movie = Directory.GetCurrentDirectory() + @"\Main.swf"; //Sets Main.swf as the Flash Movie to Play.
             AS2Container.Play(); //Plays Main.swf
             Debug.WriteLine("Main.swf is Loaded");
@@ -314,6 +328,19 @@ namespace OpenFK
 
             //
             //END OF HTTP NETCOMMANDS
+            //
+
+            //
+            //FSGUI
+            //
+
+            if (e.args.Contains("<fsgui ")) //fsgui
+            {
+                //Open FSGUI
+            }
+
+            //
+            //END OF FSGUI
             //
         }
 
