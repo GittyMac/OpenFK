@@ -34,6 +34,7 @@
             this.ScaleCB = new System.Windows.Forms.ComboBox();
             this.ExitButton = new System.Windows.Forms.Button();
             this.header = new System.Windows.Forms.Label();
+            this.rdfToggle = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // QualityCB
@@ -43,7 +44,7 @@
             "0 - High",
             "1 - Medium",
             "2 - Low"});
-            this.QualityCB.Location = new System.Drawing.Point(12, 84);
+            this.QualityCB.Location = new System.Drawing.Point(12, 104);
             this.QualityCB.Name = "QualityCB";
             this.QualityCB.Size = new System.Drawing.Size(121, 21);
             this.QualityCB.TabIndex = 0;
@@ -52,7 +53,7 @@
             // customFtoggle
             // 
             this.customFtoggle.AutoSize = true;
-            this.customFtoggle.Location = new System.Drawing.Point(12, 38);
+            this.customFtoggle.Location = new System.Drawing.Point(12, 58);
             this.customFtoggle.Name = "customFtoggle";
             this.customFtoggle.Size = new System.Drawing.Size(66, 17);
             this.customFtoggle.TabIndex = 1;
@@ -63,7 +64,7 @@
             // RPCToggle
             // 
             this.RPCToggle.AutoSize = true;
-            this.RPCToggle.Location = new System.Drawing.Point(12, 61);
+            this.RPCToggle.Location = new System.Drawing.Point(12, 81);
             this.RPCToggle.Name = "RPCToggle";
             this.RPCToggle.Size = new System.Drawing.Size(96, 17);
             this.RPCToggle.TabIndex = 2;
@@ -79,7 +80,7 @@
             "1 - Crop 4:3",
             "2 - Stretch 4:3",
             "3 - Dot by Dot"});
-            this.ScaleCB.Location = new System.Drawing.Point(12, 111);
+            this.ScaleCB.Location = new System.Drawing.Point(12, 131);
             this.ScaleCB.Name = "ScaleCB";
             this.ScaleCB.Size = new System.Drawing.Size(121, 21);
             this.ScaleCB.TabIndex = 3;
@@ -87,7 +88,7 @@
             // 
             // ExitButton
             // 
-            this.ExitButton.Location = new System.Drawing.Point(12, 138);
+            this.ExitButton.Location = new System.Drawing.Point(12, 158);
             this.ExitButton.Name = "ExitButton";
             this.ExitButton.Size = new System.Drawing.Size(75, 23);
             this.ExitButton.TabIndex = 4;
@@ -104,11 +105,23 @@
             this.header.TabIndex = 6;
             this.header.Text = "OpenFK Config";
             // 
+            // rdfToggle
+            // 
+            this.rdfToggle.AutoSize = true;
+            this.rdfToggle.Location = new System.Drawing.Point(12, 35);
+            this.rdfToggle.Name = "rdfToggle";
+            this.rdfToggle.Size = new System.Drawing.Size(89, 17);
+            this.rdfToggle.TabIndex = 7;
+            this.rdfToggle.Text = "RDF Loading";
+            this.rdfToggle.UseVisualStyleBackColor = true;
+            this.rdfToggle.CheckedChanged += new System.EventHandler(this.rdfToggle_CheckedChanged);
+            // 
             // ConfigForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(173, 175);
+            this.ClientSize = new System.Drawing.Size(173, 193);
+            this.Controls.Add(this.rdfToggle);
             this.Controls.Add(this.header);
             this.Controls.Add(this.ExitButton);
             this.Controls.Add(this.ScaleCB);
@@ -132,5 +145,6 @@
         private System.Windows.Forms.ComboBox ScaleCB;
         private System.Windows.Forms.Button ExitButton;
         private System.Windows.Forms.Label header;
+        private System.Windows.Forms.CheckBox rdfToggle;
     }
 }

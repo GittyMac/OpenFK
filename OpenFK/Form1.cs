@@ -242,7 +242,13 @@ namespace OpenFK
                     {
                         Directory.CreateDirectory(Directory.GetCurrentDirectory() + @"\data\" + foldername);
                     }
-                    File.WriteAllText(Directory.GetCurrentDirectory() + @"\data\" + foldername + @"\" + filename + ".xml", output.ToString()); //saves
+                    if (Settings.Default.RDF == true)
+                    {
+                        Encoding iso_8859_1 = Encoding.GetEncoding("iso-8859-1");
+                        byte[] RDFData = iso_8859_1.GetBytes(output.ToString());
+                        File.WriteAllBytes(Directory.GetCurrentDirectory() + @"\data\" + foldername + @"\" + filename + ".rdf", iso_8859_1.GetBytes(RDFTool.encode(iso_8859_1.GetString(RDFData))));
+                    }
+                    else File.WriteAllText(Directory.GetCurrentDirectory() + @"\data\" + foldername + @"\" + filename + ".xml", output.ToString()); //saves
                 }
             }
 
@@ -379,9 +385,15 @@ namespace OpenFK
 
         public void loadFile(string file, string folder)
         {
-            string index = @"<commands><load section=""" + file + @""" name=""" + folder + @""" result=""0"" reason="""">" + File.ReadAllText(Directory.GetCurrentDirectory() + @"\data\"+ folder + @"\" + file + ".xml") + @"</load></commands>"; //Puts XML file to string
+            Encoding iso_8859_1 = Encoding.GetEncoding("iso-8859-1");
+            string index = "";
+            if (Settings.Default.RDF == true)
+            {
+                byte[] RDFData = File.ReadAllBytes(Directory.GetCurrentDirectory() + @"\data\" + folder + @"\" + file + ".rdf");
+                index = @"<commands><load section=""" + file + @""" name=""" + folder + @""" result=""0"" reason="""">" + RDFTool.decode(iso_8859_1.GetString(RDFData)) + @"</load></commands>"; //Puts RDF file to string
+            }else index = @"<commands><load section=""" + file + @""" name=""" + folder + @""" result=""0"" reason="""">" + File.ReadAllText(Directory.GetCurrentDirectory() + @"\data\" + folder + @"\" + file + ".xml") + @"</load></commands>"; //Puts XML file to string
             setVar(index.ToString()); //Sends XML data to the game
-            Debug.WriteLine("RDF - Sent " + file + ".xml"); //Debug Output
+            Debug.WriteLine("RDF - Sent " + file); //Debug Output
         }
 
         //

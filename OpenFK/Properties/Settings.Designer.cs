@@ -25,7 +25,7 @@ namespace OpenFK.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool customF {
             get {
                 return ((bool)(this["customF"]));
@@ -68,6 +68,18 @@ namespace OpenFK.Properties {
             }
             set {
                 this["ScaleMode"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool RDF {
+            get {
+                return ((bool)(this["RDF"]));
+            }
+            set {
+                this["RDF"] = value;
             }
         }
     }

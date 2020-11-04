@@ -17,6 +17,7 @@ namespace OpenFK
             InitializeComponent();
             customFtoggle.Checked = Properties.Settings.Default.customF;
             RPCToggle.Checked = Properties.Settings.Default.RPC;
+            rdfToggle.Checked = Properties.Settings.Default.RDF;
             QualityCB.SelectedIndex = Properties.Settings.Default.Quality;
             ScaleCB.SelectedIndex = Properties.Settings.Default.ScaleMode;
         }
@@ -58,6 +59,17 @@ namespace OpenFK
         private void button1_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        private void rdfToggle_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rdfToggle.Checked)
+            {
+                Properties.Settings.Default.RDF = true;
+            }
+            else
+                Properties.Settings.Default.RDF = false;
+            Properties.Settings.Default.Save();
         }
     }
 }
