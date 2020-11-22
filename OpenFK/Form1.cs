@@ -109,6 +109,7 @@ namespace OpenFK
                                        | NotifyFilters.FileName | NotifyFilters.DirectoryName;
                 watcher.Filter = "customF.txt";
                 watcher.Changed += OnChanged;
+                watcher.SynchronizingObject = AS2Container;
                 watcher.EnableRaisingEvents = true;
             }
             //End of customF Initialization
