@@ -68,6 +68,14 @@ namespace OpenFK
             }
             //End of Main.SWF check
 
+            //Checks if the main AS3 SWF exists
+            if (!File.Exists(Directory.GetCurrentDirectory() + @"\MainAS3.swf"))
+            {
+                MessageBox.Show("Could not find MainAS3.swf!", "OpenFK", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Application.Exit();
+            }
+            //End of MainAS3.SWF check
+
             //RP Initialize
             if (Settings.Default.RPC == true)
             {
@@ -84,6 +92,12 @@ namespace OpenFK
             AS2Container.Play(); //Plays Main.swf
             Debug.WriteLine("Main.swf is Loaded");
             AS2Container.FSCommand += new _IShockwaveFlashEvents_FSCommandEventHandler(flashPlayer_FSCommand); //This sets up the FSCommand handler, which CCommunicator likes to use a lot.
+
+            AS3Container.Quality = Settings.Default.Quality;
+            AS3Container.ScaleMode = Settings.Default.ScaleMode;
+            AS3Container.Movie = Directory.GetCurrentDirectory() + @"\MainAS3.swf"; //Sets MainAS3.swf as the Flash Movie to Play.
+            Debug.WriteLine("MainAS3.swf is Loaded");
+            AS3Container.FlashCall += new _IShockwaveFlashEvents_FlashCallEventHandler(flashPlayerAS3_FlashCall);
             //End of Flash initialization
 
             //customF Initialization
@@ -100,13 +114,28 @@ namespace OpenFK
             //End of customF Initialization
         }
 
+        private void flashPlayerAS3_FlashCall(object sender, _IShockwaveFlashEvents_FlashCallEvent e)
+        {
+            Debug.WriteLine("NEW AS3 CALL!" + " - " + e.request);
+            if(e.request.Contains("<as3_loaded "))
+            {
+                setVar(@"<?xml version=""1.0"" encoding=""UTF - 8""?><commands><as3_loaded id=""1"" path=""MainAS3.swf"" result=""0"" err="""" /></commands>");
+            }
+        }
+
         //
         //CUSTOMF
         //
         private void OnChanged(object sender, FileSystemEventArgs e)
         {
-            Thread.Sleep(500);
-            setVar(@"<bitybyte id=""" + File.ReadAllText(Directory.GetCurrentDirectory() + @"\customF.txt").Remove(0, 14) + "00000000" + @""" />");
+            try //Runs a loop to keep reading until the file is not being saved.
+            {
+                setVar(@"<bitybyte id=""" + File.ReadAllText(Directory.GetCurrentDirectory() + @"\customF.txt").Remove(0, 14) + "00000000" + @""" />");
+            }
+            catch
+            {
+                OnChanged(sender, e);
+            }
         }
 
         //
@@ -256,6 +285,19 @@ namespace OpenFK
             // END OF XML SAVE COMMANDS
             //
 
+            //
+            // AS3 LOADING
+            //
+
+            if(e.args.Contains("<as3_load "))
+            {
+                AS3Container.Play();
+                AS2Container.SendToBack();
+            }
+
+            //
+            // EMD OF AS3 LOADING
+            //
 
             //
             // CLOSE COMMAND
