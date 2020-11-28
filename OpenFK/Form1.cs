@@ -38,6 +38,7 @@ namespace OpenFK
         public string Host2; //Host2
         public string Store; //FilestoreV2 (For updates)
         public string TStore; //Trunk
+        public bool DebugFeatures;
         public DiscordRpcClient client;
         private FileSystemWatcher watcher;
 
@@ -48,18 +49,6 @@ namespace OpenFK
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            //MegaByte (Not functional)
-
-            //Process MBRun = new Process();
-            //ProcessStartInfo MBData = new ProcessStartInfo();
-            //MBData.FileName = Directory.GetParent(Directory.GetCurrentDirectory()) + @"\MegaByte\" + "MegaByte.exe";
-            //MBData.Arguments = "-MBRun -MBDebug";
-            //MBData.RedirectStandardOutput = true;
-            //MBData.RedirectStandardInput = true;
-            //MBData.UseShellExecute = false;
-            //MBRun.StartInfo = MBData;
-            //MBRun.Start();
-
             //Checks if the main SWF exists
             if(!File.Exists(Directory.GetCurrentDirectory() + @"\Main.swf"))
             {
@@ -113,6 +102,27 @@ namespace OpenFK
                 watcher.EnableRaisingEvents = true;
             }
             //End of customF Initialization
+
+            //USB Initialization
+
+            //MegaByte (Not functional)
+
+            DebugFeatures = true;
+
+            if (DebugFeatures == true)
+            {
+                Process MBRun = new Process();
+                ProcessStartInfo MBData = new ProcessStartInfo();
+                MBData.FileName = Directory.GetParent(Directory.GetCurrentDirectory()) + @"\MegaByte\" + "MegaByte.exe";
+                MBData.Arguments = "-MBRun -MBDebug";
+                MBData.RedirectStandardOutput = true;
+                MBData.RedirectStandardInput = true;
+                MBData.UseShellExecute = false;
+                MBRun.StartInfo = MBData;
+                MBRun.Start();
+            }
+
+            //End of USB Initialization
         }
 
         private void flashPlayerAS3_FlashCall(object sender, _IShockwaveFlashEvents_FlashCallEvent e)
@@ -366,7 +376,10 @@ namespace OpenFK
             if (e.args.Contains("<netcommands"))
             {
                 Debug.WriteLine("NETCOMMAND!");
-                //AS2Container.SetVariable("msg", HTTPPost(e.args, Host).ToString()); //Sends the result of the POST request. It's usually a command for the game to handle.
+                if (DebugFeatures == true)
+                {
+                    AS2Container.SetVariable("msg", HTTPPost(e.args, Host).ToString()); //Sends the result of the POST request. It's usually a command for the game to handle.
+                }
             }
 
             //UPDATE CHECKS (Not standard netcommands)
@@ -466,6 +479,11 @@ namespace OpenFK
             {
                 Details = info,
                 State = title,
+                Assets = new Assets()
+                {
+                    LargeImageKey = "icon",
+                    LargeImageText = "OpenFK"
+                }
             });
         }
 
@@ -495,5 +513,22 @@ namespace OpenFK
         //END OF POST REQUESTS
         //
 
+        //
+        //RIGHT CLICK
+        //
+        protected override void WndProc(ref Message m)
+        {
+            if (m.Msg == 0x0204)
+            {
+                m.Result = IntPtr.Zero;
+                Debug.WriteLine(@"SENT - <rightclick x=""" + Cursor.Position.X + @""" y=""" + Cursor.Position.Y + @""" />");
+                setVar(@"<rightclick x=""" + Cursor.Position.X + @""" y=""" + Cursor.Position.Y + @""" />");
+                return;
+            }
+            base.WndProc(ref m);
+        }
+        //
+        //END OF RIGHT CLICK
+        //
     }
 }

@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("OpenFK")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Lako")]
+[assembly: AssemblyCompany("GittyMac")]
 [assembly: AssemblyProduct("OpenFK")]
-[assembly: AssemblyCopyright("Copyright © Lako  2020")]
+[assembly: AssemblyCopyright("Copyright © GittyMac 2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
