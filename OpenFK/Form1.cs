@@ -38,7 +38,8 @@ namespace OpenFK
         public string Host2; //Host2
         public string Store; //FilestoreV2 (For updates)
         public string TStore; //Trunk
-        public bool DebugFeatures;
+        public bool DebugMB;
+        public bool DebugOnline;
         public DiscordRpcClient client;
         private FileSystemWatcher watcher;
 
@@ -107,9 +108,9 @@ namespace OpenFK
 
             //MegaByte (Not functional)
 
-            DebugFeatures = true;
+            DebugMB = false;
 
-            if (DebugFeatures == true)
+            if (DebugMB == true)
             {
                 Process MBRun = new Process();
                 ProcessStartInfo MBData = new ProcessStartInfo();
@@ -302,6 +303,7 @@ namespace OpenFK
 
             if(e.args.Contains("<as3_load "))
             {
+                //TODO - Fully load AS3 Files
                 AS3Container.Play();
                 AS2Container.SendToBack();
             }
@@ -376,7 +378,7 @@ namespace OpenFK
             if (e.args.Contains("<netcommands"))
             {
                 Debug.WriteLine("NETCOMMAND!");
-                if (DebugFeatures == true)
+                if (DebugOnline == true)
                 {
                     AS2Container.SetVariable("msg", HTTPPost(e.args, Host).ToString()); //Sends the result of the POST request. It's usually a command for the game to handle.
                 }
@@ -511,24 +513,6 @@ namespace OpenFK
         }
         //
         //END OF POST REQUESTS
-        //
-
-        //
-        //RIGHT CLICK
-        //
-        protected override void WndProc(ref Message m)
-        {
-            if (m.Msg == 0x0204)
-            {
-                m.Result = IntPtr.Zero;
-                Debug.WriteLine(@"SENT - <rightclick x=""" + Cursor.Position.X + @""" y=""" + Cursor.Position.Y + @""" />");
-                setVar(@"<rightclick x=""" + Cursor.Position.X + @""" y=""" + Cursor.Position.Y + @""" />");
-                return;
-            }
-            base.WndProc(ref m);
-        }
-        //
-        //END OF RIGHT CLICK
         //
     }
 }

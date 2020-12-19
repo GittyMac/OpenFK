@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.AS2Container = new AxShockwaveFlashObjects.AxShockwaveFlash();
-            this.AS3Container = new AxShockwaveFlashObjects.AxShockwaveFlash();
+            this.AS2Container = new OpenFK.FlashRightClick();
+            this.AS3Container = new OpenFK.FlashRightClick();
             ((System.ComponentModel.ISupportInitialize)(this.AS2Container)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.AS3Container)).BeginInit();
             this.SuspendLayout();
@@ -73,8 +73,8 @@
 
         #endregion
 
-        private AxShockwaveFlashObjects.AxShockwaveFlash AS2Container;
-        private AxShockwaveFlashObjects.AxShockwaveFlash AS3Container;
+        private FlashRightClick AS2Container;
+        private FlashRightClick AS3Container;
     }
 }
 
