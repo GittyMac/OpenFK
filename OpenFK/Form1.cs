@@ -34,13 +34,24 @@ namespace OpenFK
 
     public partial class Form1 : Form
     {
+        //Online Data
         public string Host; //Host
         public string Host2; //Host2
         public string Store; //FilestoreV2 (For updates)
         public string TStore; //Trunk
-        public string bittyData;
+
+        //Rich Presence Data
+        public string currentBitty;
+        public string currentBittyName;
+        public string currentWorld;
+        public string currentActivity;
+
+        //Debug Flags
         public bool DebugMB;
         public bool DebugOnline;
+
+        //Items
+        public XmlDocument bittyData;
         public DiscordRpcClient client;
         private FileSystemWatcher watcher;
 
@@ -72,7 +83,7 @@ namespace OpenFK
             {
                 client = new DiscordRpcClient("CLIENTID"); //Redacted client ID.
                 client.Initialize();
-                setRP("Main Menu", "At the main menu");
+                setRP("Main Menu", "At the main menu", "fffffff0", "U.B.");
             }
             //End of RP Initialize
 
@@ -197,47 +208,47 @@ namespace OpenFK
                     {
                         if (e.args.Contains(@"=""city"""))
                         {
-                            setRP("Exploring", "Funkeystown");
+                            setRP("Exploring", "Funkeystown", currentBitty, currentBittyName);
                         }
                         else if (e.args.Contains(@"=""lava"""))
                         {
-                            setRP("Exploring", "Magma Gorge");
+                            setRP("Exploring", "Magma Gorge", currentBitty, currentBittyName);
                         }
                         else if (e.args.Contains(@"=""space"""))
                         {
-                            setRP("Exploring", "Laputta Station");
+                            setRP("Exploring", "Laputta Station", currentBitty, currentBittyName);
                         }
                         else if (e.args.Contains(@"=""underwater"""))
                         {
-                            setRP("Exploring", "Kelpy Basin");
+                            setRP("Exploring", "Kelpy Basin", currentBitty, currentBittyName);
                         }
                         else if (e.args.Contains(@"=""island"""))
                         {
-                            setRP("Exploring", "Funkiki Island");
+                            setRP("Exploring", "Funkiki Island", currentBitty, currentBittyName);
                         }
                         else if (e.args.Contains(@"=""racer"""))
                         {
-                            setRP("Exploring", "Royalton Racing Complex");
+                            setRP("Exploring", "Royalton Racing Complex", currentBitty, currentBittyName);
                         }
                         else if (e.args.Contains(@"=""night"""))
                         {
-                            setRP("Exploring", "Nightmare Rift");
+                            setRP("Exploring", "Nightmare Rift", currentBitty, currentBittyName);
                         }
                         else if (e.args.Contains(@"=""day"""))
                         {
-                            setRP("Exploring", "Daydream Oasis");
+                            setRP("Exploring", "Daydream Oasis", currentBitty, currentBittyName);
                         }
                         else if (e.args.Contains(@"=""realm"""))
                         {
-                            setRP("Exploring", "Hidden Realm");
+                            setRP("Exploring", "Hidden Realm", currentBitty, currentBittyName);
                         }
                         else if (e.args.Contains(@"=""ssl"""))
                         {
-                            setRP("Exploring", "Angus Manor");
+                            setRP("Exploring", "Angus Manor", currentBitty, currentBittyName);
                         }
                         else if (e.args.Contains(@"=""green"""))
                         {
-                            setRP("Exploring", "Paradox Green");
+                            setRP("Exploring", "Paradox Green", currentBitty, currentBittyName);
                         }
                     }
                 }
@@ -454,7 +465,8 @@ namespace OpenFK
 
             if(file == "funkeys")
             {
-                bittyData = filedata;
+                bittyData = new XmlDocument();
+                bittyData.LoadXml(filedata);
             }
 
             setVar(index.ToString()); //Sends XML data to the game
@@ -482,16 +494,20 @@ namespace OpenFK
         //RICH PRESENCE
         //
 
-        void setRP(string title, string info)
+        void setRP(string title, string info, string bittyID, string bittyName)
         {
+            currentWorld = title;
+            currentActivity = info;
+            currentBitty = bittyID;
+            currentBittyName = bittyName;
             client.SetPresence(new RichPresence()
             {
                 Details = info,
                 State = title,
                 Assets = new Assets()
                 {
-                    LargeImageKey = "icon",
-                    LargeImageText = "OpenFK"
+                    LargeImageKey = bittyID,
+                    LargeImageText = bittyName
                 }
             });
         }
@@ -507,7 +523,13 @@ namespace OpenFK
         void setBitty(string bittyID)
         {
             setVar(@"<bitybyte id=""" + bittyID + "00000000" + @""" />");
-            //TODO - Add rich presence
+            currentBitty = bittyID.ToLower();
+            XmlNodeList nodes = bittyData.SelectNodes("//funkey[@id='" + bittyID + "']");
+            foreach (XmlNode xn in nodes)
+            {
+                currentBittyName = xn.Attributes["name"].Value;
+            }
+            setRP(currentWorld, currentActivity, currentBitty, currentBittyName);
         }
 
         //
