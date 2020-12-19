@@ -14,10 +14,7 @@ namespace OpenFK
         {
             if(m.Msg == 0x204) //If it's a right click.
             {
-                if(ModifierKeys.HasFlag(Keys.Control)) //If control is held down
-                {
-                }
-                else
+                if(!ModifierKeys.HasFlag(Keys.Control)) //If control is not held down | If it is, the context menu will show
                 {
                     this.SetVariable("msg", @"<rightclick x=""" + Cursor.Position.X + @""" y=""" + Cursor.Position.Y + @""" />"); //Sends right click command to flash.
                     m.Result = IntPtr.Zero; //Blocks context menu from showing
