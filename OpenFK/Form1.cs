@@ -38,6 +38,7 @@ namespace OpenFK
         public string Host2; //Host2
         public string Store; //FilestoreV2 (For updates)
         public string TStore; //Trunk
+        public string bittyData;
         public bool DebugMB;
         public bool DebugOnline;
         public DiscordRpcClient client;
@@ -82,6 +83,12 @@ namespace OpenFK
             AS2Container.Play(); //Plays Main.swf
             Debug.WriteLine("Main.swf is Loaded");
             AS2Container.FSCommand += new _IShockwaveFlashEvents_FSCommandEventHandler(flashPlayer_FSCommand); //This sets up the FSCommand handler, which CCommunicator likes to use a lot.
+
+            //BityByte
+            if (Settings.Default.customF == true) //If using no USB
+            {
+                    setVar(@"<bitybyte id=""FFFFFFF000000000"" />");
+            }
 
             AS3Container.Quality = Settings.Default.Quality;
             AS3Container.ScaleMode = Settings.Default.ScaleMode;
@@ -142,7 +149,7 @@ namespace OpenFK
         {
             try //Runs a loop to keep reading until the file is not being saved.
             {
-                setVar(@"<bitybyte id=""" + File.ReadAllText(Directory.GetCurrentDirectory() + @"\customF.txt").Remove(0, 14) + "00000000" + @""" />");
+                setBitty(File.ReadAllText(Directory.GetCurrentDirectory() + @"\customF.txt").Remove(0, 14));
             }
             catch
             {
@@ -183,15 +190,6 @@ namespace OpenFK
                     if (e.args.Contains("config"))
                     {
 
-                    }
-
-                    //BityByte
-                    if (Settings.Default.customF == true) //If using no USB
-                    {
-                        if (e.args.Contains("trunk_main"))
-                        {
-                            setVar(@"<bitybyte id=""FFFFFFF000000000"" />");
-                        }
                     }
 
                     //Rich Prescense
@@ -445,11 +443,20 @@ namespace OpenFK
         {
             Encoding iso_8859_1 = Encoding.GetEncoding("iso-8859-1");
             string index = "";
+            string filedata = "";
             if (Settings.Default.RDF == true)
             {
                 byte[] RDFData = File.ReadAllBytes(Directory.GetCurrentDirectory() + @"\data\" + folder + @"\" + file + ".rdf");
-                index = @"<commands><load section=""" + file + @""" name=""" + folder + @""" result=""0"" reason="""">" + RDFTool.decode(iso_8859_1.GetString(RDFData)) + @"</load></commands>"; //Puts RDF file to string
-            }else index = @"<commands><load section=""" + file + @""" name=""" + folder + @""" result=""0"" reason="""">" + File.ReadAllText(Directory.GetCurrentDirectory() + @"\data\" + folder + @"\" + file + ".xml") + @"</load></commands>"; //Puts XML file to string
+                filedata = RDFTool.decode(iso_8859_1.GetString(RDFData));
+            }
+            else filedata = File.ReadAllText(Directory.GetCurrentDirectory() + @"\data\" + folder + @"\" + file + ".xml"); //Puts XML file to string
+            index = @"<commands><load section=""" + file + @""" name=""" + folder + @""" result=""0"" reason="""">" + filedata + @"</load></commands>";
+
+            if(file == "funkeys")
+            {
+                bittyData = filedata;
+            }
+
             setVar(index.ToString()); //Sends XML data to the game
             Debug.WriteLine("RDF - Sent " + file); //Debug Output
         }
@@ -491,6 +498,20 @@ namespace OpenFK
 
         //
         //END OF RICH PRESENCE
+        //
+
+        //
+        //SET BITTY
+        //
+
+        void setBitty(string bittyID)
+        {
+            setVar(@"<bitybyte id=""" + bittyID + "00000000" + @""" />");
+            //TODO - Add rich presence
+        }
+
+        //
+        //END OF SET BITTY
         //
 
         //
