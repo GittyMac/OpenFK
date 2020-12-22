@@ -8,9 +8,11 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.IO.Pipes;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -49,6 +51,19 @@ namespace OpenFK
         //Debug Flags
         public bool DebugMB;
         public bool DebugOnline;
+
+        //MegaByte Data
+        private System.Windows.Forms.Timer bittyTimer; //Timer to check connected bitty.
+
+        [DllImport("kernel32.dll")]
+        public static extern IntPtr OpenProcess(int dwDesiredAccess, bool bInheritHandle, int dwProcessId);
+
+        [DllImport("kernel32.dll")]
+        public static extern bool ReadProcessMemory(int hProcess, int lpBaseAddress, byte[] lpBuffer, int dwSize, ref int lpNumberOfBytesRead);
+        const int PROCESS_WM_READ = 0x0010;
+
+        public string bittyID; //Current bitty connected.
+
 
         //Items
         public XmlDocument bittyData;
@@ -124,25 +139,74 @@ namespace OpenFK
 
             //USB Initialization
 
-            //MegaByte (Not functional)
-
-            DebugMB = false;
-
-            if (DebugMB == true)
+            if (Settings.Default.USBSupport == true)
             {
                 Process MBRun = new Process();
                 ProcessStartInfo MBData = new ProcessStartInfo();
                 MBData.FileName = Directory.GetParent(Directory.GetCurrentDirectory()) + @"\MegaByte\" + "MegaByte.exe";
                 MBData.Arguments = "-MBRun -MBDebug";
-                MBData.RedirectStandardOutput = true;
-                MBData.RedirectStandardInput = true;
                 MBData.UseShellExecute = false;
                 MBRun.StartInfo = MBData;
                 MBRun.Start();
+                InitTimer();
             }
 
             //End of USB Initialization
         }
+
+        //
+        //USB READING
+        //
+        public void InitTimer()
+        {
+            bittyTimer = new System.Windows.Forms.Timer();
+            bittyTimer.Tick += new EventHandler(bittyT_Tick);
+            bittyTimer.Interval = 1000;
+            bittyTimer.Start();
+        }
+
+        private void bittyT_Tick(object sender, EventArgs e)
+        {
+            try
+            {
+                Process process = Process.GetProcessesByName("MegaByte")[0]; //Get the process
+                int bytesRead = 0;
+                IntPtr processHandle = OpenProcess(PROCESS_WM_READ, false, process.Id);
+                byte[] buffer = new byte[4]; //BittyID is 4 bytes
+
+                //This reads the memory to fetch the current bittyID
+                ReadProcessMemory((int)processHandle, 0x0049F020, buffer, buffer.Length, ref bytesRead);
+                Int32 baseValue = BitConverter.ToInt32(buffer, 0);
+
+                Int32 firstAddress = baseValue + 0xF88;
+                ReadProcessMemory((int)processHandle, firstAddress, buffer, buffer.Length, ref bytesRead);
+                Int32 firstValue = BitConverter.ToInt32(buffer, 0);
+
+                ReadProcessMemory((int)processHandle, firstValue, buffer, buffer.Length, ref bytesRead);
+
+                //Converts bytes to BittyID
+                int bittyIDInt = BitConverter.ToInt32(buffer, 0);
+                string s = bittyIDInt.ToString("X").PadLeft(8, '0');
+                if (s == "00000000") //If no bitty is connected.
+                {
+                    s = "FFFFFFF0";
+                }
+                if (s != bittyID) //If it's still the same, it won't repeat the actions
+                {
+                    Debug.WriteLine("BittyID - " + s);
+                    bittyID = s;
+                    setBitty(s);
+                }
+            }
+            catch
+            {
+
+            }
+        }
+        //
+        //END OF USB READING
+        //
+
 
         private void flashPlayerAS3_FlashCall(object sender, _IShockwaveFlashEvents_FlashCallEvent e)
         {
@@ -331,6 +395,11 @@ namespace OpenFK
                 {
                     client.Dispose(); //Disposes RP
                 }
+                if(Settings.Default.USBSupport == true)
+                {
+                    Process process = Process.GetProcessesByName("MegaByte")[0];
+                    process.Kill();
+                }
                 Application.Exit(); //Closes OpenFK
                 Debug.WriteLine("radicaclose called, goodbye!"); //Debug output
             }
@@ -438,6 +507,11 @@ namespace OpenFK
                 {
                     client.Dispose(); //Disposes RP
                 }
+                if (Settings.Default.USBSupport == true)
+                {
+                    Process process = Process.GetProcessesByName("MegaByte")[0];
+                    process.Kill();
+                }
                 Application.Exit(); //Closes OpenFK
             }
         }
@@ -524,12 +598,22 @@ namespace OpenFK
         {
             setVar(@"<bitybyte id=""" + bittyID + "00000000" + @""" />");
             currentBitty = bittyID.ToLower();
-            XmlNodeList nodes = bittyData.SelectNodes("//funkey[@id='" + bittyID + "']");
-            foreach (XmlNode xn in nodes)
+            if (Settings.Default.RPC == true)
             {
-                currentBittyName = xn.Attributes["name"].Value;
+                try
+                {
+                    XmlNodeList nodes = bittyData.SelectNodes("//funkey[@id='" + bittyID + "']");
+                    foreach (XmlNode xn in nodes)
+                    {
+                        currentBittyName = xn.Attributes["name"].Value;
+                    }
+                    setRP(currentWorld, currentActivity, currentBitty, currentBittyName);
+                }
+                catch
+                {
+
+                }
             }
-            setRP(currentWorld, currentActivity, currentBitty, currentBittyName);
         }
 
         //

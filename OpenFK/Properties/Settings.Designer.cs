@@ -37,7 +37,7 @@ namespace OpenFK.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool RPC {
             get {
                 return ((bool)(this["RPC"]));
@@ -80,6 +80,18 @@ namespace OpenFK.Properties {
             }
             set {
                 this["RDF"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool USBSupport {
+            get {
+                return ((bool)(this["USBSupport"]));
+            }
+            set {
+                this["USBSupport"] = value;
             }
         }
     }

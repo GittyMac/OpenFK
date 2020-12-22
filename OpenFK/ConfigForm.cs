@@ -20,6 +20,7 @@ namespace OpenFK
             rdfToggle.Checked = Properties.Settings.Default.RDF;
             QualityCB.SelectedIndex = Properties.Settings.Default.Quality;
             ScaleCB.SelectedIndex = Properties.Settings.Default.ScaleMode;
+            USBToggle.Checked = Properties.Settings.Default.USBSupport;
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -69,6 +70,17 @@ namespace OpenFK
             }
             else
                 Properties.Settings.Default.RDF = false;
+            Properties.Settings.Default.Save();
+        }
+
+        private void USBToggle_CheckedChanged(object sender, EventArgs e)
+        {
+            if (USBToggle.Checked)
+            {
+                Properties.Settings.Default.USBSupport = true;
+            }
+            else
+                Properties.Settings.Default.USBSupport = false;
             Properties.Settings.Default.Save();
         }
     }

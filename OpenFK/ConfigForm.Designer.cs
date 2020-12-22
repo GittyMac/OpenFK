@@ -35,6 +35,7 @@
             this.ExitButton = new System.Windows.Forms.Button();
             this.header = new System.Windows.Forms.Label();
             this.rdfToggle = new System.Windows.Forms.CheckBox();
+            this.USBToggle = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // QualityCB
@@ -44,7 +45,7 @@
             "0 - High",
             "1 - Medium",
             "2 - Low"});
-            this.QualityCB.Location = new System.Drawing.Point(12, 104);
+            this.QualityCB.Location = new System.Drawing.Point(12, 129);
             this.QualityCB.Name = "QualityCB";
             this.QualityCB.Size = new System.Drawing.Size(121, 21);
             this.QualityCB.TabIndex = 0;
@@ -80,7 +81,7 @@
             "1 - Crop 4:3",
             "2 - Stretch 4:3",
             "3 - Dot by Dot"});
-            this.ScaleCB.Location = new System.Drawing.Point(12, 131);
+            this.ScaleCB.Location = new System.Drawing.Point(12, 156);
             this.ScaleCB.Name = "ScaleCB";
             this.ScaleCB.Size = new System.Drawing.Size(121, 21);
             this.ScaleCB.TabIndex = 3;
@@ -88,7 +89,7 @@
             // 
             // ExitButton
             // 
-            this.ExitButton.Location = new System.Drawing.Point(12, 158);
+            this.ExitButton.Location = new System.Drawing.Point(12, 183);
             this.ExitButton.Name = "ExitButton";
             this.ExitButton.Size = new System.Drawing.Size(75, 23);
             this.ExitButton.TabIndex = 4;
@@ -116,11 +117,23 @@
             this.rdfToggle.UseVisualStyleBackColor = true;
             this.rdfToggle.CheckedChanged += new System.EventHandler(this.rdfToggle_CheckedChanged);
             // 
+            // USBToggle
+            // 
+            this.USBToggle.AutoSize = true;
+            this.USBToggle.Location = new System.Drawing.Point(15, 104);
+            this.USBToggle.Name = "USBToggle";
+            this.USBToggle.Size = new System.Drawing.Size(88, 17);
+            this.USBToggle.TabIndex = 8;
+            this.USBToggle.Text = "USB Support";
+            this.USBToggle.UseVisualStyleBackColor = true;
+            this.USBToggle.CheckedChanged += new System.EventHandler(this.USBToggle_CheckedChanged);
+            // 
             // ConfigForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(173, 193);
+            this.ClientSize = new System.Drawing.Size(173, 218);
+            this.Controls.Add(this.USBToggle);
             this.Controls.Add(this.rdfToggle);
             this.Controls.Add(this.header);
             this.Controls.Add(this.ExitButton);
@@ -146,5 +159,6 @@
         private System.Windows.Forms.Button ExitButton;
         private System.Windows.Forms.Label header;
         private System.Windows.Forms.CheckBox rdfToggle;
+        private System.Windows.Forms.CheckBox USBToggle;
     }
 }
