@@ -85,14 +85,6 @@ namespace OpenFK
             }
             //End of Main.SWF check
 
-            //Checks if the main AS3 SWF exists
-            if (!File.Exists(Directory.GetCurrentDirectory() + @"\MainAS3.swf"))
-            {
-                MessageBox.Show("Could not find MainAS3.swf!", "OpenFK", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Application.Exit();
-            }
-            //End of MainAS3.SWF check
-
             //RP Initialize
             if (Settings.Default.RPC == true)
             {
@@ -109,12 +101,6 @@ namespace OpenFK
             AS2Container.Play(); //Plays Main.swf
             Debug.WriteLine("Main.swf is Loaded");
             AS2Container.FSCommand += new _IShockwaveFlashEvents_FSCommandEventHandler(flashPlayer_FSCommand); //This sets up the FSCommand handler, which CCommunicator likes to use a lot.
-
-            //BityByte
-            if (Settings.Default.customF == true) //If using no USB
-            {
-                    setVar(@"<bitybyte id=""FFFFFFF000000000"" />");
-            }
 
             AS3Container.Quality = Settings.Default.Quality;
             AS3Container.ScaleMode = Settings.Default.ScaleMode;
@@ -146,6 +132,7 @@ namespace OpenFK
                 MBData.FileName = Directory.GetParent(Directory.GetCurrentDirectory()) + @"\MegaByte\" + "MegaByte.exe";
                 MBData.Arguments = "-MBRun -MBDebug";
                 MBData.UseShellExecute = false;
+                MBData.WindowStyle = ProcessWindowStyle.Minimized;
                 MBRun.StartInfo = MBData;
                 MBRun.Start();
                 InitTimer();
@@ -175,10 +162,10 @@ namespace OpenFK
                 byte[] buffer = new byte[4]; //BittyID is 4 bytes
 
                 //This reads the memory to fetch the current bittyID
-                ReadProcessMemory((int)processHandle, 0x0049F020, buffer, buffer.Length, ref bytesRead);
+                ReadProcessMemory((int)processHandle, 0x0049F020, buffer, buffer.Length, ref bytesRead); //With address
                 Int32 baseValue = BitConverter.ToInt32(buffer, 0);
 
-                Int32 firstAddress = baseValue + 0xF88;
+                Int32 firstAddress = baseValue + 0xF88; //With pointer
                 ReadProcessMemory((int)processHandle, firstAddress, buffer, buffer.Length, ref bytesRead);
                 Int32 firstValue = BitConverter.ToInt32(buffer, 0);
 
@@ -322,6 +309,21 @@ namespace OpenFK
             // END OF XML LOAD COMMANDS
             //
 
+            //
+            //LOADED
+            //
+            if(e.args.Contains("<loaded ")){
+
+                //BityByte
+                if (Settings.Default.customF == true) //If using no USB
+                {
+                    setVar(@"<bitybyte id=""FFFFFFF000000000"" />");
+                }
+            }
+            
+            //
+            //END OF LOADED
+            //
 
             //
             // XML SAVE COMMANDS
@@ -379,6 +381,7 @@ namespace OpenFK
                 //TODO - Fully load AS3 Files
                 AS3Container.Play();
                 AS2Container.SendToBack();
+                setVar(@"<as3_transit idfrom=""%d"" xml=""%s"" />");
             }
 
             //

@@ -120,7 +120,7 @@
             // USBToggle
             // 
             this.USBToggle.AutoSize = true;
-            this.USBToggle.Location = new System.Drawing.Point(15, 104);
+            this.USBToggle.Location = new System.Drawing.Point(12, 104);
             this.USBToggle.Name = "USBToggle";
             this.USBToggle.Size = new System.Drawing.Size(88, 17);
             this.USBToggle.TabIndex = 8;
