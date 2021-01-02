@@ -8,11 +8,12 @@ OpenFK adds new features while doing the same functions as the executable.
 | ------------ | ------------ |
 | File loading via XMLs  | Checking updates |
 | Saving files  | ActionScript 3 Elements |
-| Fullscreen and Windowed mode | USB connectivity |
+| Fullscreen and Windowed mode |
 | Basic online functionality | |
 | Mod support | |
 | Closing the game | |
 | Native RDF loading | |
+| USB connectivity | |
 
 ### Installing OpenFK
 OpenFK requires some manual work to set it up fully. 

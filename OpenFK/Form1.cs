@@ -102,11 +102,19 @@ namespace OpenFK
             Debug.WriteLine("Main.swf is Loaded");
             AS2Container.FSCommand += new _IShockwaveFlashEvents_FSCommandEventHandler(flashPlayer_FSCommand); //This sets up the FSCommand handler, which CCommunicator likes to use a lot.
 
-            AS3Container.Quality = Settings.Default.Quality;
-            AS3Container.ScaleMode = Settings.Default.ScaleMode;
-            AS3Container.Movie = Directory.GetCurrentDirectory() + @"\MainAS3.swf"; //Sets MainAS3.swf as the Flash Movie to Play.
-            Debug.WriteLine("MainAS3.swf is Loaded");
-            AS3Container.FlashCall += new _IShockwaveFlashEvents_FlashCallEventHandler(flashPlayerAS3_FlashCall);
+            try
+            {
+                AS3Container.Quality = Settings.Default.Quality;
+                AS3Container.ScaleMode = Settings.Default.ScaleMode;
+                AS3Container.Movie = Directory.GetCurrentDirectory() + @"\MainAS3.swf"; //Sets MainAS3.swf as the Flash Movie to Play.
+                AS3Container.Play();
+                Debug.WriteLine("MainAS3.swf is Loaded");
+                AS3Container.FlashCall += new _IShockwaveFlashEvents_FlashCallEventHandler(flashPlayerAS3_FlashCall);
+            }
+            catch
+            {
+                Debug.WriteLine("AS3 Failed to Load! Potentially an older version.");
+            }
             //End of Flash initialization
 
             //customF Initialization
@@ -376,13 +384,13 @@ namespace OpenFK
             // AS3 LOADING
             //
 
-            if(e.args.Contains("<as3_load "))
+            if (e.args.Contains("<as3_load "))
             {
-                //TODO - Fully load AS3 Files
-                AS3Container.Play();
+                //TODO - Find out if UG games load differently.
                 AS2Container.SendToBack();
-                setVar(@"<as3_transit idfrom=""%d"" xml=""%s"" />");
-            }
+                setVar(@"<getstaticdata />");
+                setVar(@"<getgamedata />");
+            }            
 
             //
             // EMD OF AS3 LOADING
@@ -532,20 +540,28 @@ namespace OpenFK
             Encoding iso_8859_1 = Encoding.GetEncoding("iso-8859-1");
             string index = "";
             string filedata = "";
-            if (Settings.Default.RDF == true)
+            try
             {
-                byte[] RDFData = File.ReadAllBytes(Directory.GetCurrentDirectory() + @"\data\" + folder + @"\" + file + ".rdf");
-                filedata = RDFTool.decode(iso_8859_1.GetString(RDFData));
-            }
-            else filedata = File.ReadAllText(Directory.GetCurrentDirectory() + @"\data\" + folder + @"\" + file + ".xml"); //Puts XML file to string
-            index = @"<commands><load section=""" + file + @""" name=""" + folder + @""" result=""0"" reason="""">" + filedata + @"</load></commands>";
+                if (Settings.Default.RDF == true)
+                {
+                    byte[] RDFData = File.ReadAllBytes(Directory.GetCurrentDirectory() + @"\data\" + folder + @"\" + file + ".rdf");
+                    filedata = RDFTool.decode(iso_8859_1.GetString(RDFData));
+                }
+                else filedata = File.ReadAllText(Directory.GetCurrentDirectory() + @"\data\" + folder + @"\" + file + ".xml"); //Puts XML file to string
+                index = @"<commands><load section=""" + file + @""" name=""" + folder + @""" result=""0"" reason="""">" + filedata + @"</load></commands>";
 
-            if(file == "funkeys")
+
+                if (file == "funkeys")
+                {
+                    bittyData = new XmlDocument();
+                    bittyData.LoadXml(filedata);
+                }
+
+            }
+            catch
             {
-                bittyData = new XmlDocument();
-                bittyData.LoadXml(filedata);
+                index = @"<commands><load section=""" + file + @""" name=""" + folder + @""" result=""1"" reason=""Error loading file!"" /></commands>"; //I would just let dotNET handle this, but UGLevels needs an error to continue.
             }
-
             setVar(index.ToString()); //Sends XML data to the game
             Debug.WriteLine("RDF - Sent " + file); //Debug Output
         }
