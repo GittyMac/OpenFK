@@ -107,8 +107,8 @@ namespace OpenFK
                 AS3Container.Quality = Settings.Default.Quality;
                 AS3Container.ScaleMode = Settings.Default.ScaleMode;
                 AS3Container.Movie = Directory.GetCurrentDirectory() + @"\MainAS3.swf"; //Sets MainAS3.swf as the Flash Movie to Play.
-                AS3Container.Play();
                 Debug.WriteLine("MainAS3.swf is Loaded");
+                AS3Container.FSCommand += new _IShockwaveFlashEvents_FSCommandEventHandler(flashPlayerAS3_FSCommand);
                 AS3Container.FlashCall += new _IShockwaveFlashEvents_FlashCallEventHandler(flashPlayerAS3_FlashCall);
             }
             catch
@@ -147,6 +147,36 @@ namespace OpenFK
             }
 
             //End of USB Initialization
+        }
+
+        private void flashPlayerAS3_FSCommand(object sender, _IShockwaveFlashEvents_FSCommandEvent e)
+        {
+            Debug.WriteLine("AS3 COMMAND! - " + e.command + " " + e.args);
+            if(e.args.Contains("<save_jpeg ")) //Saving jpegs for UG game thumbnails or game over backgrounds.
+            {
+                XmlDocument request = new XmlDocument(); //e.args to xml
+                request.LoadXml(e.args);
+                XmlNodeList xnList = request.SelectNodes("/commands/save_jpeg"); //filters xml to the load info
+                foreach (XmlNode xn in xnList) //fetches the information to load
+                {
+                    //Saves Base64 input as a JPEG.
+                    string jpegBase64 = xn.Attributes["str"].Value;
+                    string filePath = xn.Attributes["name"].Value;
+                    var bytes = Convert.FromBase64String(jpegBase64);
+                    Directory.CreateDirectory(Path.GetDirectoryName(Directory.GetCurrentDirectory() + @"\" + filePath));
+                    using (var jpegToSave = new FileStream(Directory.GetCurrentDirectory() + @"\" + filePath, FileMode.Create))
+                    {
+                        jpegToSave.Write(bytes, 0, bytes.Length);
+                        jpegToSave.Flush();
+                    }
+                    AS3Container.CallFunction(@"<invoke name=""WrapperCall"" returntype=""xml""><arguments><string>save_jpeg</string><string>0</string><string></string></arguments></invoke>"); //Gives result to game.
+                }
+            }
+
+            if (e.args.Contains("<as3_transit"))
+            {
+                setVar(e.args); //Sends the AS3 command to AS2.
+            }
         }
 
         //
@@ -381,19 +411,48 @@ namespace OpenFK
             //
 
             //
-            // AS3 LOADING
+            // AS3 COMMANDS
             //
 
             if (e.args.Contains("<as3_load "))
             {
-                //TODO - Find out if UG games load differently.
-                AS2Container.SendToBack();
+                AS3Container.Play();
+                AS2Container.SendToBack(); //Goes to AS3 container.
                 setVar(@"<getstaticdata />");
                 setVar(@"<getgamedata />");
-            }            
+                setVar(@"<getugsettings />");
+            }
+
+            if (e.args.Contains("<as3_close"))
+            {
+                setVar(@"<leavegame />"); //Tells the AS3 game to end.
+                AS3Container.SendToBack(); //Returns to AS2 container.
+                AS3Container.Stop();
+            }
+
+            if(e.args.Contains("<as3_setcurrentid "))
+            {
+                //The game unescapes this string. "<commands><setid id="0" /></commands>" is the string. Unsure if it does anything, but it does not give a failure.
+                AS3Container.CallFunction(@"<invoke name=""WrapperCall"" returntype=""xml""><arguments><string>setid</string><string>%3c%63%6f%6d%6d%61%6e%64%73%3e%3c%73%65%74%69%64%20%69%64%3d%22%30%22%20%2f%3e%3c%2f%63%6f%6d%6d%61%6e%64%73%3e</string><string>%3c%63%6f%6d%6d%61%6e%64%73%3e%3c%73%65%74%69%64%20%69%64%3d%22%30%22%20%2f%3e%3c%2f%63%6f%6d%6d%61%6e%64%73%3e</string></arguments></invoke>");
+                AS3Container.SendToBack();
+                Directory.Delete(Directory.GetCurrentDirectory() + @"\misc\tmp\", true); //Deletes the temporary folder used for the results.
+            }
+
+            if (e.args.Contains("<del_file ")) //Deletes files, only for UG thumnails.
+            {
+                XmlDocument request = new XmlDocument(); //e.args to xml
+                request.LoadXml(e.args);
+                XmlNodeList xnList = request.SelectNodes("/commands/save_jpeg"); //filters xml to the load info
+                foreach (XmlNode xn in xnList) //fetches the information to load
+                {
+                    //XML LOADING
+                    string fileToDelete = xn.Attributes["path"].Value;
+                    File.Delete(Directory.GetCurrentDirectory() + @"\" + fileToDelete);
+                }
+            }
 
             //
-            // EMD OF AS3 LOADING
+            // EMD OF AS3 COMMANDS
             //
 
             //
@@ -510,7 +569,7 @@ namespace OpenFK
             e.Cancel = (e.CloseReason == CloseReason.UserClosing);
             if (e.CloseReason == CloseReason.UserClosing) //If user clicked the close button
             {
-                AS2Container.SetVariable("msg", @"<radicaclose />");
+                setVar(@"<radicaclose />");
             }
             if (e.CloseReason == CloseReason.WindowsShutDown) //If windows is shutting down
             {
