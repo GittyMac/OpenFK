@@ -22,8 +22,16 @@ OpenFK requires some manual work to set it up fully.
 Put the contents of the OpenFK release into your RadicaGame folder.
 
 You will also need to find the Flash.ocx file, it is usually found in the `C:\Windows\System32\Macromed\Flash\` directory. Put the Flash.ocx file with your OpenFK.exe file.
+You should find a Flash.ocx file from 2019 and earlier, as the newer versions will be locked out on January 12.
+You can grab an older version of Flash.ocx from an install.wim file from a Windows 10 version that is from 2019 or earlier.
 
 Be sure to run the 'Configure OpenFK.bat' file to choose from some choices!
+
+### How to use USB support.
+To use USB support, you will need to have the MegaByte drivers installed. 
+Enable USB Support in the OpenFK configuration.
+Set MegaByte.exe (Located by RadicaGame in the MegaByte folder) to Vista SP2 compatibility.
+Now you can use USB with OpenFK! (customF and USB can work together!)
 
 ### Building OpenFK
 You can build OpenFK with anything that can build dotNET 4.5 projects, like Visual Studio. You also need to have the ActiveX version of Adobe Flash Player installed to be able to use the 'Shockwave Flash Object' COM component.
