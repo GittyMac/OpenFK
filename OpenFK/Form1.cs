@@ -38,7 +38,7 @@ namespace OpenFK
     {
         //Online Data
         public string Host; //Host
-        public string Host2; //Host2
+        public string Host1; //Host2
         public string Store; //FilestoreV2 (For updates)
         public string TStore; //Trunk
 
@@ -93,6 +93,8 @@ namespace OpenFK
                 setRP("Main Menu", "At the main menu", "fffffff0", "U.B.");
             }
             //End of RP Initialize
+
+            DebugOnline = true;
 
             //Flash initialization
             AS2Container.Quality = Settings.Default.Quality;
@@ -536,6 +538,8 @@ namespace OpenFK
             if (e.args.Contains("checkupdate"))
             {
                 Debug.WriteLine("UPDATE - Requested!");
+                var localStore = XDocument.Load(Directory.GetCurrentDirectory() + @"\Store.xml");
+                var netStore = XDocument.Parse(Get(Store + @"/Store.xml"));
             }
 
             //
@@ -614,6 +618,35 @@ namespace OpenFK
                 {
                     bittyData = new XmlDocument();
                     bittyData.LoadXml(filedata);
+                }
+
+                if (file == "config")
+                {
+                    XmlDocument configData = new XmlDocument();
+                    configData.LoadXml(filedata);
+                    XmlNodeList xnList1 = configData.SelectNodes("/settings/host"); //filters xml to the load info;
+                    foreach (XmlNode xn in xnList1) //fetches the information to load
+                    {
+                        Host = xn.Attributes["value"].Value;
+                    }
+
+                    XmlNodeList xnList2 = configData.SelectNodes("/settings/host1"); //filters xml to the load info;
+                    foreach (XmlNode xn in xnList2) //fetches the information to load
+                    {
+                        Host1 = xn.Attributes["value"].Value;
+                    }
+
+                    XmlNodeList xnList3 = configData.SelectNodes("/settings/store"); //filters xml to the load info;
+                    foreach (XmlNode xn in xnList3) //fetches the information to load
+                    {
+                        Store = xn.Attributes["value"].Value;
+                    }
+
+                    XmlNodeList xnList4 = configData.SelectNodes("/settings/trunkstore"); //filters xml to the load info;
+                    foreach (XmlNode xn in xnList4) //fetches the information to load
+                    {
+                        TStore = xn.Attributes["value"].Value;
+                    }
                 }
 
             }
@@ -718,6 +751,25 @@ namespace OpenFK
         }
         //
         //END OF POST REQUESTS
+        //
+
+        //
+        //HTTP GET
+        //
+        public string Get(string uri)
+        {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
+            request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+
+            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+            using (Stream stream = response.GetResponseStream())
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                return reader.ReadToEnd();
+            }
+        }
+        //
+        //END OF HTTP GET
         //
     }
 }
