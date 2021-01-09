@@ -25,7 +25,7 @@ You will also need to find the Flash.ocx file, it is usually found in the `C:\Wi
 
 You should find a Flash.ocx file from 2019 and earlier, as the newer versions will be locked out on January 12.
 
-You can grab an older version of Flash.ocx from an install.wim file from a Windows 10 version that is from 2019 or earlier.
+You can grab an older version of Flash.ocx from an install.wim file from a Windows 10 ISO that is from 2019 or earlier.
 
 Be sure to run the 'Configure OpenFK.bat' file to choose from some choices!
 
