@@ -21,11 +21,7 @@ OpenFK requires some manual work to set it up fully.
 
 Put the contents of the OpenFK release into your RadicaGame folder.
 
-You will also need to find the Flash.ocx file, it is usually found in the `C:\Windows\System32\Macromed\Flash\` directory. Put the Flash.ocx file with your OpenFK.exe file.
-
-You should find a Flash.ocx file from 2019 and earlier, as the newer versions will be locked out on January 12.
-
-You can grab an older version of Flash.ocx from an install.wim file from a Windows 10 ISO that is from 2019 or earlier.
+You will also need to find the Flash.ocx file, you can run FetchOCX.bat [(Click here to download)](https://github.com/GittyMac/OpenFK/releases/download/v1.5/FetchOCX.bat) in RadicaGame to easily download and extract a compatible version. (Note FetchOCX is only for x64 for now.)
 
 Be sure to run the 'Configure OpenFK.bat' file to choose from some choices!
 
