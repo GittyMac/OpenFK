@@ -1,5 +1,6 @@
 ﻿using AxShockwaveFlashObjects;
 using DiscordRPC;
+using Microsoft.Win32;
 using OpenFK.Properties;
 using System;
 using System.Collections.Generic;
@@ -137,6 +138,11 @@ namespace OpenFK
 
             if (Settings.Default.USBSupport == true)
             {
+                var key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers", true);
+                if (key == null)
+                    throw new InvalidOperationException(@"Cannot open registry key HKCU\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers.");
+                using (key)
+                    key.SetValue(Directory.GetParent(Directory.GetCurrentDirectory()) + @"\MegaByte\" + "MegaByte.exe", "VISTASP2");
                 Process MBRun = new Process();
                 ProcessStartInfo MBData = new ProcessStartInfo();
                 MBData.FileName = Directory.GetParent(Directory.GetCurrentDirectory()) + @"\MegaByte\" + "MegaByte.exe";
@@ -469,8 +475,15 @@ namespace OpenFK
                 }
                 if(Settings.Default.USBSupport == true)
                 {
-                    Process process = Process.GetProcessesByName("MegaByte")[0];
-                    process.Kill();
+                    try
+                    {
+                        Process process = Process.GetProcessesByName("MegaByte")[0];
+                        process.Kill();
+                    }
+                    catch
+                    {
+                        Application.Exit();
+                    }
                 }
                 Application.Exit(); //Closes OpenFK
                 Debug.WriteLine("radicaclose called, goodbye!"); //Debug output

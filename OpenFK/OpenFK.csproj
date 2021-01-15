@@ -151,6 +151,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="Resources\FetchOCX.bat" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="AxShockwaveFlashObjects">
