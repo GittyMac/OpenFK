@@ -21,7 +21,7 @@ OpenFK requires some manual work to set it up fully.
 
 Put the contents of the OpenFK release into your RadicaGame folder.
 
-You will also need to find the Flash.ocx file, OpenFK will prompt you to download a compatible version if you don't have one. If it doesn't prompt you, you can [(download and use the FetchOCX.bat utility.)](https://github.com/GittyMac/OpenFK/releases/download/v1.5/FetchOCX.bat)
+You will also need to find the Flash.ocx file, OpenFK will prompt you to download a compatible version if you don't have one. If it doesn't prompt you, you can [download and use the FetchOCX.bat utility.](https://github.com/GittyMac/OpenFK/releases/download/v1.5/FetchOCX.bat)
 
 Be sure to run the 'Configure OpenFK.bat' file to choose from some choices!
 
