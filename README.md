@@ -26,13 +26,13 @@ You will also need to find the Flash.ocx file, OpenFK will prompt you to downloa
 Be sure to run the 'Configure OpenFK.bat' file to choose from some choices!
 
 ### How to use USB support.
-To use USB support, you will need to have the MegaByte drivers installed. 
+**To use USB support, you will need to have the MegaByte drivers installed.** 
 
 Enable USB Support in the OpenFK configuration.
 
-Set MegaByte.exe (Located by RadicaGame in the MegaByte folder) to Vista SP2 compatibility.
-
 Now you can use USB with OpenFK! (customF and USB can work together!)
+
+Please note USB support currently uses a workaround which can sometimes not work correctly.
 
 ### Building OpenFK
 You can build OpenFK with anything that can build dotNET 4.5 projects, like Visual Studio. You also need to have the ActiveX version of Adobe Flash Player installed to be able to use the 'Shockwave Flash Object' COM component.
