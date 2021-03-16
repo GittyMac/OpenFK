@@ -1,4 +1,4 @@
-﻿using AxShockwaveFlashObjects;
+using AxShockwaveFlashObjects;
 using DiscordRPC;
 using Microsoft.Win32;
 using OpenFK.Properties;
@@ -550,9 +550,38 @@ namespace OpenFK
             //UPDATE CHECKS (Not standard netcommands)
             if (e.args.Contains("checkupdate"))
             {
+                string localVersion = "";
                 Debug.WriteLine("UPDATE - Requested!");
-                var localStore = XDocument.Load(Directory.GetCurrentDirectory() + @"\Store.xml");
-                var netStore = XDocument.Parse(Get(Store + @"/Store.xml"));
+                setVar(@"<progress percent=""0.25"" />");
+                try
+                {
+                    var localStore = XDocument.Load(Directory.GetCurrentDirectory() + @"\update.xml");
+                    localVersion = localStore.Root.Attribute("name").Value;
+                }
+                catch
+                {
+                    Debug.WriteLine("No update.xml found...");
+                }
+                setVar(@"<progress percent=""25.00"" />");
+                try
+                {
+                    Debug.WriteLine("getting github xml");
+                    var netStore = XDocument.Parse(Get(@"https://raw.githubusercontent.com/GittyMac/OpenFK/master/update.xml"));
+                    Debug.WriteLine("got the xml");
+                    string netVersion = netStore.Root.Attribute("name").Value;
+                    setVar(@"<progress percent=""50.00"" />");
+                    if (localVersion != netVersion)
+                    {
+                        Debug.WriteLine("update needed!");
+                        netStore.Save(Directory.GetCurrentDirectory() + @"\update.xml");
+                        setVar(@"<checkupdate result=""2"" reason=""New version of OpenFK found."" version=""2009_07_16_544"" size=""350000"" curversion=""5.0"" extversion=""5.0"" extname=""" + netVersion + @""" />");
+                    }
+                }
+                catch
+                {
+                    Debug.WriteLine("No update!");
+                    throw;
+                }
             }
 
             //
@@ -771,6 +800,8 @@ namespace OpenFK
         //
         public string Get(string uri)
         {
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
             request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
 
