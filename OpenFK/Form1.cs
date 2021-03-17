@@ -1,4 +1,4 @@
-using AxShockwaveFlashObjects;
+﻿using AxShockwaveFlashObjects;
 using DiscordRPC;
 using Microsoft.Win32;
 using OpenFK.Properties;
@@ -42,6 +42,9 @@ namespace OpenFK
         public string Host1; //Host2
         public string Store; //FilestoreV2 (For updates)
         public string TStore; //Trunk
+
+        public XDocument netStore;
+        public XDocument fsnetStore;
 
         //Rich Presence Data
         public string currentBitty;
@@ -551,12 +554,16 @@ namespace OpenFK
             if (e.args.Contains("checkupdate"))
             {
                 string localVersion = "";
+                string localVerNum = "1.6";
+                string fslocalVersion = "";
+                string fslocalVerNum = "1.0";
                 Debug.WriteLine("UPDATE - Requested!");
                 setVar(@"<progress percent=""0.25"" />");
                 try
                 {
                     var localStore = XDocument.Load(Directory.GetCurrentDirectory() + @"\update.xml");
                     localVersion = localStore.Root.Attribute("name").Value;
+                    localVerNum = localStore.Root.Attribute("version").Value;
                 }
                 catch
                 {
@@ -566,21 +573,109 @@ namespace OpenFK
                 try
                 {
                     Debug.WriteLine("getting github xml");
-                    var netStore = XDocument.Parse(Get(@"https://raw.githubusercontent.com/GittyMac/OpenFK/master/update.xml"));
+                    netStore = XDocument.Parse(Get(@"https://raw.githubusercontent.com/GittyMac/OpenFK/master/update.xml"));
                     Debug.WriteLine("got the xml");
                     string netVersion = netStore.Root.Attribute("name").Value;
+                    string netVersionNum = netStore.Root.Attribute("version").Value;
+                    string netVersionSize = netStore.Root.Attribute("size").Value;
                     setVar(@"<progress percent=""50.00"" />");
                     if (localVersion != netVersion)
                     {
                         Debug.WriteLine("update needed!");
                         netStore.Save(Directory.GetCurrentDirectory() + @"\update.xml");
-                        setVar(@"<checkupdate result=""2"" reason=""New version of OpenFK found."" version=""2009_07_16_544"" size=""350000"" curversion=""5.0"" extversion=""5.0"" extname=""" + netVersion + @""" />");
+                        setVar(@"<checkupdate result=""2"" reason=""New version of OpenFK found."" version=""2009_07_16_544"" size=""" + netVersionSize + @""" curversion=""" + localVerNum + @""" extversion=""" + netVersionNum + @""" extname=""" + netVersion + @""" />");
+                    }
+                    else if(File.Exists(Directory.GetCurrentDirectory() + @"\FunkeySelectorGUI.exe"))
+                    {
+                        try
+                        {
+                            var localStore = XDocument.Load(Directory.GetCurrentDirectory() + @"\fsguiupdate.xml");
+                            fslocalVersion = localStore.Root.Attribute("name").Value;
+                            fslocalVerNum = localStore.Root.Attribute("version").Value;
+                        }
+                        catch
+                        {
+                            Debug.WriteLine("No update.xml found...");
+                        }
+                        setVar(@"<progress percent=""75.00"" />");
+                        try
+                        {
+                            Debug.WriteLine("getting github xml");
+                            fsnetStore = XDocument.Parse(Get(@"https://raw.githubusercontent.com/GittyMac/FunkeySelectorGUI/master/update.xml"));
+                            Debug.WriteLine("got the xml");
+                            string fsnetVersion = fsnetStore.Root.Attribute("name").Value;
+                            string fsnetVersionNum = fsnetStore.Root.Attribute("version").Value;
+                            string fsnetVersionSize = fsnetStore.Root.Attribute("size").Value;
+                            setVar(@"<progress percent=""90.00"" />");
+                            if (fslocalVersion != fsnetVersion)
+                            {
+                                try
+                                {
+                                    Process process = Process.GetProcessesByName("FunkeySelectorGUI")[0];
+                                    process.Kill();
+                                }
+                                catch
+                                {
+                                    Debug.WriteLine("no fsgui to close...");
+                                }
+                                Debug.WriteLine("update needed!");
+                                setVar(@"<checkupdate result=""2"" reason=""New version of FSGUI found."" version=""2009_07_16_544"" size=""" + fsnetVersionSize + @""" curversion=""" + fslocalVerNum + @""" extversion=""" + fsnetVersionNum + @""" extname=""" + fsnetVersion + @""" />");
+                            }
+                            else
+                            {
+                                setVar(@"<checkupdate result=""0"" reason=""Everything is up to date."" />");
+                            }
+                        }
+                        catch
+                        {
+                            Debug.WriteLine("No update!");
+                            setVar(@"<checkupdate result=""1"" reason=""Could not find the FunkeySelectorGUI update!"" />");
+                        }
+                    }
+                    else
+                    {
+                        setVar(@"<checkupdate result=""0"" reason=""Everything is up to date."" />");
                     }
                 }
                 catch
                 {
                     Debug.WriteLine("No update!");
-                    throw;
+                    setVar(@"<checkupdate result=""1"" reason=""Could not find the OpenFK update!"" />");
+                }
+            }
+
+            if(e.args.Contains(@"<loadupdate "))
+            {
+                try
+                {
+                    if (fsnetStore != null)
+                    {
+                        string fsnetDL = fsnetStore.Root.Attribute("url").Value;
+                        using (var client = new WebClient())
+                        {
+                            ServicePointManager.Expect100Continue = true;
+                            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                            client.DownloadFile(fsnetDL, Directory.GetCurrentDirectory() + @"\FunkeySelectorGUI.exe");
+                        }
+                        fsnetStore.Save(Directory.GetCurrentDirectory() + @"\fsguiupdate.xml");
+                        setVar(@"<loadupdate result=""0"" reason=""good"" />");
+                    }
+                    else
+                    {
+                        string netDL = netStore.Root.Attribute("url64").Value;
+                        using (var client = new WebClient())
+                        {
+                            ServicePointManager.Expect100Continue = true;
+                            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                            client.DownloadFile(netDL, Directory.GetCurrentDirectory() + @"\tmpdl.zip");
+                        }
+                        netStore.Save(Directory.GetCurrentDirectory() + @"\update.xml");
+                        setVar(@"<loadupdate result=""0"" reason=""good"" />");
+                    }
+                }
+                catch
+                {
+                    setVar(@"<loadupdate result=""1"" reason=""The update has failed! Try restarting OpenFK..."" />");
                 }
             }
 
