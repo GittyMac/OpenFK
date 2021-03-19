@@ -1,0 +1,59 @@
+body
+{
+    font-family: 'Comic Sans MS';
+    text-align: center;
+}
+
+marquee
+{
+font-weight: bold;
+font-size: 24px;
+}
+
+h1
+{
+font-size: 78px;
+margin-top: 0px;
+margin-bottom: 0px;
+}
+
+h2
+{
+font-size: 48px;
+margin-top: 0px;
+margin-bottom: 0px;
+}
+
+h3
+{
+font-size: 24px;
+margin-top: 0px;
+margin-bottom: 0px;
+}
+
+.dl
+{
+    font-weight: bold;
+    font-style: italic;
+    font-size: 72px;
+    color: seagreen;
+}
+
+.sidenav 
+{
+    margin: auto;
+    width: 50%;
+    height: auto;
+    position: relative;
+    overflow: auto;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    color: white;
+    font-size: 24px;
+    text-align: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    border-radius: 20px;
+}
