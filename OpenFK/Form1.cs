@@ -99,7 +99,7 @@ namespace OpenFK
             }
             //End of RP Initialize
 
-            DebugOnline = true;
+            DebugOnline = false;
 
             //Flash initialization
             AS2Container.Quality = Settings.Default.Quality;
@@ -237,7 +237,7 @@ namespace OpenFK
             }
             catch
             {
-                bittyTimer.Stop();
+                
             }
         }
         //
