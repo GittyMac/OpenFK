@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConfigForm));
             this.QualityCB = new System.Windows.Forms.ComboBox();
             this.customFtoggle = new System.Windows.Forms.CheckBox();
             this.RPCToggle = new System.Windows.Forms.CheckBox();
@@ -142,6 +143,7 @@
             this.Controls.Add(this.customFtoggle);
             this.Controls.Add(this.QualityCB);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "ConfigForm";
             this.Text = "Config";

@@ -80,5 +80,19 @@ namespace OpenFK.Properties {
                 return ResourceManager.GetString("FetchOCX", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to echo OpenFK Update in progress...
+        ///taskkill /f /im OpenFK.exe
+        ///xcopy /s /y &quot;%cd%\tmpdl&quot; &quot;%cd%&quot;
+        ///rmdir /s &quot;%cd%\tmpdl&quot;
+        ///del &quot;%cd%\tmpdl.zip&quot;
+        ///start &quot;&quot; &quot;%cd%\OpenFK.exe&quot;.
+        /// </summary>
+        internal static string Update {
+            get {
+                return ResourceManager.GetString("Update", resourceCulture);
+            }
+        }
     }
 }

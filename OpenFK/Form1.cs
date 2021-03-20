@@ -43,6 +43,10 @@ namespace OpenFK
         public string Store; //FilestoreV2 (For updates)
         public string TStore; //Trunk
 
+        public XDocument netStore; //GitHub update.xml
+        public XDocument fsnetStore; //GitHub update.xml for FSGUI
+        public bool WasUpdated = false; //Determines if the OpenFK update script should run.
+
         //Rich Presence Data
         public string currentBitty;
         public string currentBittyName;
@@ -233,7 +237,7 @@ namespace OpenFK
             }
             catch
             {
-
+                bittyTimer.Stop();
             }
         }
         //
@@ -292,13 +296,6 @@ namespace OpenFK
                     foldername = xn.Attributes["name"].Value;
                     Debug.WriteLine("RDF Request: Section - {0} Name - {1}", filename, foldername);
                     loadFile(filename, foldername);
-
-                    //Server Data
-                    //TO BE IMPLEMENTED!!!
-                    if (e.args.Contains("config"))
-                    {
-
-                    }
 
                     //Rich Prescense
                     if (Settings.Default.RPC == true)
@@ -359,7 +356,6 @@ namespace OpenFK
             //LOADED
             //
             if(e.args.Contains("<loaded ")){
-
                 //BityByte
                 if (Settings.Default.customF == true) //If using no USB
                 {
@@ -482,8 +478,22 @@ namespace OpenFK
                     }
                     catch
                     {
+                        if (WasUpdated == true) //If the game was updated. I don't know why it doesn't use a special command, but fine I guess...
+                        {
+                            File.WriteAllText(Directory.GetCurrentDirectory() + @"\update.bat", Properties.Resources.Update);
+                            ProcessStartInfo updatescript = new ProcessStartInfo(Directory.GetCurrentDirectory() + @"\update.bat");
+                            updatescript.UseShellExecute = true;
+                            var updateprocess = Process.Start(updatescript);
+                        }
                         Application.Exit();
                     }
+                }
+                if(WasUpdated == true) //If the game was updated. I don't know why it doesn't use a special command, but fine I guess...
+                {
+                    File.WriteAllText(Directory.GetCurrentDirectory() + @"\update.bat", Properties.Resources.Update);
+                    ProcessStartInfo updatescript = new ProcessStartInfo(Directory.GetCurrentDirectory() + @"\update.bat");
+                    updatescript.UseShellExecute = true;
+                    var updateprocess = Process.Start(updatescript);
                 }
                 Application.Exit(); //Closes OpenFK
                 Debug.WriteLine("radicaclose called, goodbye!"); //Debug output
@@ -550,9 +560,142 @@ namespace OpenFK
             //UPDATE CHECKS (Not standard netcommands)
             if (e.args.Contains("checkupdate"))
             {
+                string localVersion = "";
+                string localVerNum = "1.6";
+                string fslocalVersion = "";
+                string fslocalVerNum = "1.0";
                 Debug.WriteLine("UPDATE - Requested!");
-                var localStore = XDocument.Load(Directory.GetCurrentDirectory() + @"\Store.xml");
-                var netStore = XDocument.Parse(Get(Store + @"/Store.xml"));
+                setVar(@"<progress percent=""0.25"" />");
+                try
+                {
+                    var localStore = XDocument.Load(Directory.GetCurrentDirectory() + @"\update.xml");
+                    localVersion = localStore.Root.Attribute("name").Value;
+                    localVerNum = localStore.Root.Attribute("version").Value;
+                }
+                catch
+                {
+                    Debug.WriteLine("No update.xml found...");
+                }
+                setVar(@"<progress percent=""25.00"" />");
+                try
+                {
+                    Debug.WriteLine("getting github xml");
+                    netStore = XDocument.Parse(Get(@"https://raw.githubusercontent.com/GittyMac/OpenFK/master/update.xml"));
+                    Debug.WriteLine("got the xml");
+                    string netVersion = netStore.Root.Attribute("name").Value;
+                    string netVersionNum = netStore.Root.Attribute("version").Value;
+                    string netVersionSize = netStore.Root.Attribute("size").Value;
+                    setVar(@"<progress percent=""50.00"" />");
+                    if (localVersion != netVersion)
+                    {
+                        Debug.WriteLine("update needed!");
+                        netStore.Save(Directory.GetCurrentDirectory() + @"\update.xml");
+                        setVar(@"<checkupdate result=""2"" reason=""New version of OpenFK found."" version=""2009_07_16_544"" size=""" + netVersionSize + @""" curversion=""" + localVerNum + @""" extversion=""" + netVersionNum + @""" extname=""" + netVersion + @""" />");
+                    }
+                    else if(File.Exists(Directory.GetCurrentDirectory() + @"\FunkeySelectorGUI.exe"))
+                    {
+                        try
+                        {
+                            var localStore = XDocument.Load(Directory.GetCurrentDirectory() + @"\fsguiupdate.xml");
+                            fslocalVersion = localStore.Root.Attribute("name").Value;
+                            fslocalVerNum = localStore.Root.Attribute("version").Value;
+                        }
+                        catch
+                        {
+                            Debug.WriteLine("No update.xml found...");
+                        }
+                        setVar(@"<progress percent=""75.00"" />");
+                        try
+                        {
+                            Debug.WriteLine("getting github xml");
+                            fsnetStore = XDocument.Parse(Get(@"https://raw.githubusercontent.com/GittyMac/FunkeySelectorGUI/master/update.xml"));
+                            Debug.WriteLine("got the xml");
+                            string fsnetVersion = fsnetStore.Root.Attribute("name").Value;
+                            string fsnetVersionNum = fsnetStore.Root.Attribute("version").Value;
+                            string fsnetVersionSize = fsnetStore.Root.Attribute("size").Value;
+                            setVar(@"<progress percent=""90.00"" />");
+                            if (fslocalVersion != fsnetVersion)
+                            {
+                                try
+                                {
+                                    Process process = Process.GetProcessesByName("FunkeySelectorGUI")[0];
+                                    process.Kill();
+                                }
+                                catch
+                                {
+                                    Debug.WriteLine("no fsgui to close...");
+                                }
+                                Debug.WriteLine("update needed!");
+                                setVar(@"<checkupdate result=""2"" reason=""New version of FSGUI found."" version=""2009_07_16_544"" size=""" + fsnetVersionSize + @""" curversion=""" + fslocalVerNum + @""" extversion=""" + fsnetVersionNum + @""" extname=""" + fsnetVersion + @""" />");
+                            }
+                            else
+                            {
+                                setVar(@"<checkupdate result=""0"" reason=""Everything is up to date."" />");
+                            }
+                        }
+                        catch
+                        {
+                            Debug.WriteLine("No update!");
+                            setVar(@"<checkupdate result=""1"" reason=""Could not find the FunkeySelectorGUI update!"" />");
+                        }
+                    }
+                    else
+                    {
+                        setVar(@"<checkupdate result=""0"" reason=""Everything is up to date."" />");
+                    }
+                }
+                catch
+                {
+                    Debug.WriteLine("No update!");
+                    setVar(@"<checkupdate result=""1"" reason=""Could not find the OpenFK update!"" />");
+                }
+            }
+
+            if(e.args.Contains(@"<loadupdate "))
+            {
+                try
+                {
+                    if (fsnetStore != null)
+                    {
+                        string fsnetDL = fsnetStore.Root.Attribute("url").Value;
+                        using (var client = new WebClient())
+                        {
+                            ServicePointManager.Expect100Continue = true;
+                            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                            client.DownloadFile(fsnetDL, Directory.GetCurrentDirectory() + @"\FunkeySelectorGUI.exe");
+                        }
+                        fsnetStore.Save(Directory.GetCurrentDirectory() + @"\fsguiupdate.xml");
+                        setVar(@"<loadupdate result=""0"" reason=""good"" />");
+                    }
+                    else
+                    {
+                        string netDL = "";
+                        if (Environment.Is64BitProcess)
+                        {
+                            netDL = netStore.Root.Attribute("url64").Value;
+                        }
+                        else
+                        {
+                            netDL = netStore.Root.Attribute("url32").Value;
+                        }
+
+                        using (var client = new WebClient())
+                        {
+                            ServicePointManager.Expect100Continue = true;
+                            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                            client.DownloadFile(netDL, Directory.GetCurrentDirectory() + @"\tmpdl.zip");
+                        }
+                        netStore.Save(Directory.GetCurrentDirectory() + @"\update.xml");
+                        Directory.CreateDirectory(Path.GetDirectoryName(Directory.GetCurrentDirectory() + @"\tmpdl\"));
+                        System.IO.Compression.ZipFile.ExtractToDirectory(Directory.GetCurrentDirectory() + @"\tmpdl.zip", Directory.GetCurrentDirectory() + @"\tmpdl\");
+                        setVar(@"<loadupdate result=""0"" reason=""good"" />");
+                        WasUpdated = true;
+                    }
+                }
+                catch
+                {
+                    setVar(@"<loadupdate result=""1"" reason=""The update has failed! Try restarting OpenFK..."" />");
+                }
             }
 
             //
@@ -771,6 +914,8 @@ namespace OpenFK
         //
         public string Get(string uri)
         {
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
             request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
 

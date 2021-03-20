@@ -17,6 +17,10 @@ namespace OpenFK
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            if (File.Exists(Directory.GetCurrentDirectory() + @"\update.bat"))
+            {
+                File.Delete(Directory.GetCurrentDirectory() + @"\update.bat");
+            }
             if (args.Contains("/config"))
             {
                 Application.Run(new ConfigForm());
