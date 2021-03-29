@@ -93,7 +93,7 @@ namespace OpenFK
             //RP Initialize
             if (Settings.Default.RPC == true)
             {
-                client = new DiscordRpcClient("CLIENTID"); //Redacted client ID.
+                client = new DiscordRpcClient("506150783893504001");
                 client.Initialize();
                 setRP("Main Menu", "At the main menu", "fffffff0", "U.B.");
             }
