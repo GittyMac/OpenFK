@@ -1,3 +1,5 @@
+![OpenFK Logo](https://github.com/GittyMac/OpenFK/blob/gh-pages/logo.png?raw=true)
+
 # OpenFK
 #### An open source replacement for the U.B. Funkeys executable.
 
