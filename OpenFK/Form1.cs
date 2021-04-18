@@ -68,6 +68,7 @@ namespace OpenFK
         const int PROCESS_WM_READ = 0x0010;
 
         public string bittyID; //Current bitty connected.
+        public string usbBittyID;
 
 
         //Items
@@ -228,10 +229,10 @@ namespace OpenFK
                 {
                     s = "FFFFFFF0";
                 }
-                if (s != bittyID) //If it's still the same, it won't repeat the actions
+                if (s != usbBittyID) //If it's still the same, it won't repeat the actions
                 {
+                    usbBittyID = s;
                     Debug.WriteLine("BittyID - " + s);
-                    bittyID = s;
                     setBitty(s);
                 }
             }
@@ -861,24 +862,28 @@ namespace OpenFK
         //SET BITTY
         //
 
-        void setBitty(string bittyID)
+        void setBitty(string localBittyID)
         {
-            setVar(@"<bitybyte id=""" + bittyID + "00000000" + @""" />");
-            currentBitty = bittyID.ToLower();
-            if (Settings.Default.RPC == true)
+            if(bittyID != localBittyID)
             {
-                try
+                setVar(@"<bitybyte id=""" + localBittyID + "00000000" + @""" />");
+                bittyID = localBittyID;
+                currentBitty = localBittyID.ToLower();
+                if (Settings.Default.RPC == true)
                 {
-                    XmlNodeList nodes = bittyData.SelectNodes("//funkey[@id='" + bittyID + "']");
-                    foreach (XmlNode xn in nodes)
+                    try
                     {
-                        currentBittyName = xn.Attributes["name"].Value;
+                        XmlNodeList nodes = bittyData.SelectNodes("//funkey[@id='" + localBittyID + "']");
+                        foreach (XmlNode xn in nodes)
+                        {
+                            currentBittyName = xn.Attributes["name"].Value;
+                        }
+                        setRP(currentWorld, currentActivity, currentBitty, currentBittyName);
                     }
-                    setRP(currentWorld, currentActivity, currentBitty, currentBittyName);
-                }
-                catch
-                {
+                    catch
+                    {
 
+                    }
                 }
             }
         }
