@@ -562,7 +562,7 @@ namespace OpenFK
             if (e.args.Contains("checkupdate"))
             {
                 string localVersion = "";
-                string localVerNum = "1.6";
+                string localVerNum = "1.8";
                 string fslocalVersion = "";
                 string fslocalVerNum = "1.0";
                 Debug.WriteLine("UPDATE - Requested!");
