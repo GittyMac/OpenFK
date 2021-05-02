@@ -104,6 +104,7 @@ namespace OpenFK
 
             //Flash initialization
             AS2Container.Quality = Settings.Default.Quality;
+            AS2Container.Quality2 = "High";
             AS2Container.ScaleMode = Settings.Default.ScaleMode;
             AS2Container.Movie = Directory.GetCurrentDirectory() + @"\Main.swf"; //Sets Main.swf as the Flash Movie to Play.
             AS2Container.Play(); //Plays Main.swf
@@ -113,6 +114,7 @@ namespace OpenFK
             try
             {
                 AS3Container.Quality = Settings.Default.Quality;
+                AS3Container.Quality2 = "High";
                 AS3Container.ScaleMode = Settings.Default.ScaleMode;
                 AS3Container.Movie = Directory.GetCurrentDirectory() + @"\MainAS3.swf"; //Sets MainAS3.swf as the Flash Movie to Play.
                 Debug.WriteLine("MainAS3.swf is Loaded");
@@ -559,7 +561,7 @@ namespace OpenFK
             }
 
             //UPDATE CHECKS (Not standard netcommands)
-            if (e.args.Contains("checkupdate"))
+            if (e.args.Contains("<commands><checkupdate"))
             {
                 string localVersion = "";
                 string localVerNum = "1.8";
