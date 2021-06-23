@@ -73,6 +73,7 @@ namespace OpenFK
 
         //Items
         public XmlDocument bittyData;
+        public XmlDocument userData;
         public DiscordRpcClient client;
         private FileSystemWatcher watcher;
 
@@ -108,7 +109,7 @@ namespace OpenFK
             AS2Container.ScaleMode = Settings.Default.ScaleMode;
             AS2Container.Movie = Directory.GetCurrentDirectory() + @"\Main.swf"; //Sets Main.swf as the Flash Movie to Play.
             AS2Container.Play(); //Plays Main.swf
-            Debug.WriteLine("Main.swf is Loaded");
+            Debug.WriteLine("[AS2Container] Main.swf is Loaded");
             AS2Container.FSCommand += new _IShockwaveFlashEvents_FSCommandEventHandler(flashPlayer_FSCommand); //This sets up the FSCommand handler, which CCommunicator likes to use a lot.
 
             try
@@ -117,13 +118,13 @@ namespace OpenFK
                 AS3Container.Quality2 = "High";
                 AS3Container.ScaleMode = Settings.Default.ScaleMode;
                 AS3Container.Movie = Directory.GetCurrentDirectory() + @"\MainAS3.swf"; //Sets MainAS3.swf as the Flash Movie to Play.
-                Debug.WriteLine("MainAS3.swf is Loaded");
+                Debug.WriteLine("[AS3Container] MainAS3.swf is Loaded");
                 AS3Container.FSCommand += new _IShockwaveFlashEvents_FSCommandEventHandler(flashPlayerAS3_FSCommand);
                 AS3Container.FlashCall += new _IShockwaveFlashEvents_FlashCallEventHandler(flashPlayerAS3_FlashCall);
             }
             catch
             {
-                Debug.WriteLine("AS3 Failed to Load! Potentially an older version.");
+                Debug.WriteLine("[AS3Container] AS3 Failed to Load! Potentially an older version.");
             }
             //End of Flash initialization
 
@@ -166,7 +167,7 @@ namespace OpenFK
 
         private void flashPlayerAS3_FSCommand(object sender, _IShockwaveFlashEvents_FSCommandEvent e)
         {
-            Debug.WriteLine("AS3 COMMAND! - " + e.command + " " + e.args);
+            Debug.WriteLine("[AS3] [SendMsg] " + e.args);
             if(e.args.Contains("<save_jpeg ")) //Saving jpegs for UG game thumbnails or game over backgrounds.
             {
                 XmlDocument request = new XmlDocument(); //e.args to xml
@@ -234,7 +235,7 @@ namespace OpenFK
                 if (s != usbBittyID) //If it's still the same, it won't repeat the actions
                 {
                     usbBittyID = s;
-                    Debug.WriteLine("BittyID - " + s);
+                    Debug.WriteLine("[Bitty] USB bitty - " + s);
                     setBitty(s);
                 }
             }
@@ -250,7 +251,7 @@ namespace OpenFK
 
         private void flashPlayerAS3_FlashCall(object sender, _IShockwaveFlashEvents_FlashCallEvent e)
         {
-            Debug.WriteLine("NEW AS3 CALL!" + " - " + e.request);
+            Debug.WriteLine("[AS3] [FlashCall] " + e.request);
             if(e.request.Contains("<as3_loaded "))
             {
                 setVar(@"<?xml version=""1.0"" encoding=""UTF - 8""?><commands><as3_loaded id=""1"" path=""MainAS3.swf"" result=""0"" err="""" /></commands>");
@@ -278,7 +279,7 @@ namespace OpenFK
 
         void flashPlayer_FSCommand(object sender, _IShockwaveFlashEvents_FSCommandEvent e) //FSCommand Handler
         {
-            Debug.WriteLine("NEW COMMAND!" + " - " + e.command + " " + e.args);
+            Debug.WriteLine("[AS2] [SendMsg] " + e.args);
 
             //
             // XML LOAD COMMANDS
@@ -297,7 +298,7 @@ namespace OpenFK
                     //XML LOADING
                     filename = xn.Attributes["section"].Value;
                     foldername = xn.Attributes["name"].Value;
-                    Debug.WriteLine("RDF Request: Section - {0} Name - {1}", filename, foldername);
+                    Debug.WriteLine("[Load] File Requested - {1}/{0}", filename, foldername);
                     loadFile(filename, foldername);
 
                     //Rich Prescense
@@ -387,7 +388,7 @@ namespace OpenFK
                 {
                     filename = xn.Attributes["section"].Value;
                     foldername = xn.Attributes["name"].Value;
-                    Debug.WriteLine("RDF Request: Section - {0} Name - {1}", filename, foldername); //debug output
+                    Debug.WriteLine("[Save] File Requested - {1}/{0}", filename, foldername); //debug output
 
                     XDocument args = XDocument.Parse(e.args);
 
@@ -410,6 +411,7 @@ namespace OpenFK
                         File.WriteAllBytes(Directory.GetCurrentDirectory() + @"\data\" + foldername + @"\" + filename + ".rdf", iso_8859_1.GetBytes(RDFTool.encode(iso_8859_1.GetString(RDFData))));
                     }
                     else File.WriteAllText(Directory.GetCurrentDirectory() + @"\data\" + foldername + @"\" + filename + ".xml", output.ToString()); //saves
+                    Debug.WriteLine("[Save] Successfully saved - " + foldername + "/" + filename); //Debug Output
                 }
             }
 
@@ -499,7 +501,7 @@ namespace OpenFK
                     var updateprocess = Process.Start(updatescript);
                 }
                 Application.Exit(); //Closes OpenFK
-                Debug.WriteLine("radicaclose called, goodbye!"); //Debug output
+                Debug.WriteLine("[OpenFK] Radicaclose was called"); //Debug output
             }
 
             //
@@ -521,7 +523,6 @@ namespace OpenFK
                 string commandLimited = "";
                 foreach (XmlNode node in nodeList)
                 {
-                    Debug.WriteLine(node.InnerXml);
                     commandLimited = node.InnerXml;
                 }
                 XmlDocument doc2 = new XmlDocument();
@@ -553,7 +554,7 @@ namespace OpenFK
             //HTTP POST (CRIB SAVING + POSTCARDS)
             if (e.args.Contains("<netcommands"))
             {
-                Debug.WriteLine("NETCOMMAND!");
+                Debug.WriteLine("[Network] Netcommand called.");
                 if (DebugOnline == true)
                 {
                     AS2Container.SetVariable("msg", HTTPPost(e.args, Host).ToString()); //Sends the result of the POST request. It's usually a command for the game to handle.
@@ -567,7 +568,7 @@ namespace OpenFK
                 string localVerNum = "1.8";
                 string fslocalVersion = "";
                 string fslocalVerNum = "1.0";
-                Debug.WriteLine("UPDATE - Requested!");
+                Debug.WriteLine("[Network] [Update] Update Requested");
                 setVar(@"<progress percent=""0.25"" />");
                 try
                 {
@@ -577,21 +578,21 @@ namespace OpenFK
                 }
                 catch
                 {
-                    Debug.WriteLine("No update.xml found...");
+                    Debug.WriteLine("[Network] [Update] Update.xml was not found");
                 }
                 setVar(@"<progress percent=""25.00"" />");
                 try
                 {
-                    Debug.WriteLine("getting github xml");
+                    Debug.WriteLine("[Network] [Update] Downloading Update.xml from GitHub");
                     netStore = XDocument.Parse(Get(@"https://raw.githubusercontent.com/GittyMac/OpenFK/master/update.xml"));
-                    Debug.WriteLine("got the xml");
+                    Debug.WriteLine("[Network] [Update] Update.xml was downloaded");
                     string netVersion = netStore.Root.Attribute("name").Value;
                     string netVersionNum = netStore.Root.Attribute("version").Value;
                     string netVersionSize = netStore.Root.Attribute("size").Value;
                     setVar(@"<progress percent=""50.00"" />");
                     if (localVersion != netVersion)
                     {
-                        Debug.WriteLine("update needed!");
+                        Debug.WriteLine("[Network] [Update] An update is needed");
                         netStore.Save(Directory.GetCurrentDirectory() + @"\update.xml");
                         setVar(@"<checkupdate result=""2"" reason=""New version of OpenFK found."" version=""2009_07_16_544"" size=""" + netVersionSize + @""" curversion=""" + localVerNum + @""" extversion=""" + netVersionNum + @""" extname=""" + netVersion + @""" />");
                     }
@@ -605,14 +606,14 @@ namespace OpenFK
                         }
                         catch
                         {
-                            Debug.WriteLine("No update.xml found...");
+                            Debug.WriteLine("[Network] [Update] FSGUI Update.xml was not found");
                         }
                         setVar(@"<progress percent=""75.00"" />");
                         try
                         {
-                            Debug.WriteLine("getting github xml");
+                            Debug.WriteLine("[Network] [Update] Downloading FSGUI Update.xml from GitHub");
                             fsnetStore = XDocument.Parse(Get(@"https://raw.githubusercontent.com/GittyMac/FunkeySelectorGUI/master/update.xml"));
-                            Debug.WriteLine("got the xml");
+                            Debug.WriteLine("[Network] [Update] FSGUI Update.xml was downloaded");
                             string fsnetVersion = fsnetStore.Root.Attribute("name").Value;
                             string fsnetVersionNum = fsnetStore.Root.Attribute("version").Value;
                             string fsnetVersionSize = fsnetStore.Root.Attribute("size").Value;
@@ -626,9 +627,9 @@ namespace OpenFK
                                 }
                                 catch
                                 {
-                                    Debug.WriteLine("no fsgui to close...");
+                                    Debug.WriteLine("[Network] [Update] Cannot close FSGUI");
                                 }
-                                Debug.WriteLine("update needed!");
+                                Debug.WriteLine("[Network] [Update] A FSGUI update is needed");
                                 setVar(@"<checkupdate result=""2"" reason=""New version of FSGUI found."" version=""2009_07_16_544"" size=""" + fsnetVersionSize + @""" curversion=""" + fslocalVerNum + @""" extversion=""" + fsnetVersionNum + @""" extname=""" + fsnetVersion + @""" />");
                             }
                             else
@@ -638,7 +639,7 @@ namespace OpenFK
                         }
                         catch
                         {
-                            Debug.WriteLine("No update!");
+                            Debug.WriteLine("[Network] [Update] No FSGUI update");
                             setVar(@"<checkupdate result=""1"" reason=""Could not find the FunkeySelectorGUI update!"" />");
                         }
                     }
@@ -649,7 +650,7 @@ namespace OpenFK
                 }
                 catch
                 {
-                    Debug.WriteLine("No update!");
+                    Debug.WriteLine("[Network] [Update] No update");
                     setVar(@"<checkupdate result=""1"" reason=""Could not find the OpenFK update!"" />");
                 }
             }
@@ -703,6 +704,52 @@ namespace OpenFK
 
             //
             //END OF HTTP NETCOMMANDS
+            //
+
+            //
+            // XML LOAD COMMANDS
+            //
+
+            if (e.args.Contains("<createuser ")) //load
+            {
+                //XML PARSING
+                string username;
+                string password;
+                string savepassword;
+                string hinta;
+                string hintq;
+                XmlDocument request = new XmlDocument(); //e.args to xml
+                request.LoadXml(e.args);
+                XmlNodeList xnList = request.SelectNodes("/commands/createuser"); //filters xml to the load info
+                foreach (XmlNode xn in xnList) //fetches the information to load
+                {
+                    //XML LOADING
+                    username = xn.Attributes["name"].Value;
+                    password = xn.Attributes["password"].Value;
+                    savepassword = xn.Attributes["savepassword"].Value;
+                    hintq = xn.Attributes["hintq"].Value;
+                    hinta = xn.Attributes["hinta"].Value;
+                    Debug.WriteLine("[Load] File Requested - system/users");
+                    loadFile("users", "system");
+                    string userString = userData.OuterXml;
+                    string data2send = userString.Replace("</users>", "") + @"<user gname=""" + username + @""" hinta=""" + hinta + @""" hintq=""" + hintq + @""" savepassword=""" + savepassword + @""" password=""" + password + @""" name=""" + username + @""" /></users>";
+                    if (!Directory.Exists(Directory.GetCurrentDirectory() + @"\data\" + "system"))
+                    {
+                        Directory.CreateDirectory(Directory.GetCurrentDirectory() + @"\data\" + "system");
+                    }
+                    if (Settings.Default.RDF == true)
+                    {
+                        Encoding iso_8859_1 = Encoding.GetEncoding("iso-8859-1");
+                        byte[] RDFData = iso_8859_1.GetBytes(data2send.ToString());
+                        File.WriteAllBytes(Directory.GetCurrentDirectory() + @"\data\" + "system" + @"\" + "users" + ".rdf", iso_8859_1.GetBytes(RDFTool.encode(iso_8859_1.GetString(RDFData))));
+                    }
+                    else File.WriteAllText(Directory.GetCurrentDirectory() + @"\data\" + "system" + @"\" + "users" + ".xml", data2send.ToString()); //saves
+                    Debug.WriteLine("[UserAdd] Successfully added user - " + username); //Debug Output
+                }
+            }
+
+            //
+            // END OF XML LOAD COMMANDS
             //
 
             //
@@ -779,6 +826,12 @@ namespace OpenFK
                     bittyData.LoadXml(filedata);
                 }
 
+                if (file == "users")
+                {
+                    userData = new XmlDocument();
+                    userData.LoadXml(filedata);
+                }
+
                 if (file == "config")
                 {
                     XmlDocument configData = new XmlDocument();
@@ -814,7 +867,7 @@ namespace OpenFK
                 index = @"<commands><load section=""" + file + @""" name=""" + folder + @""" result=""1"" reason=""Error loading file!"" /></commands>"; //I would just let dotNET handle this, but UGLevels needs an error to continue.
             }
             setVar(index.ToString()); //Sends XML data to the game
-            Debug.WriteLine("RDF - Sent " + file); //Debug Output
+            Debug.WriteLine("[Load] Successfully loaded - " + folder + "/" + file); //Debug Output
         }
 
         //

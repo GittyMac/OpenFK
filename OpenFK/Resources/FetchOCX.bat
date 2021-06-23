@@ -2,6 +2,8 @@
 echo Welcome to OpenFK OCX fetcher!
 echo Written by GittyMac
 echo ------------------------------
+for /f "delims=" %%a in ('powershell $PSVersionTable.PSVersion.Major') do set "var=%%a"
+if %var% lss 3 @echo Your Powershell version is too old to fetch the OCX. Update Powershell to version 3 or higher. && pause && exit
 echo Downloading data...
 mkdir tempdl
 cd tempdl
