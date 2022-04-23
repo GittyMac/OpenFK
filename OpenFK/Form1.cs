@@ -101,7 +101,7 @@ namespace OpenFK
             }
             //End of RP Initialize
 
-            DebugOnline = false;
+            DebugOnline = Properties.Settings.Default.IsOnline;
 
             //Flash initialization
             AS2Container.Quality = Settings.Default.Quality;
