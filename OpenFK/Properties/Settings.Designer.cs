@@ -94,5 +94,65 @@ namespace OpenFK.Properties {
                 this["USBSupport"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsOnline {
+            get {
+                return ((bool)(this["IsOnline"]));
+            }
+            set {
+                this["IsOnline"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("localhost")]
+        public string HTTPHost1 {
+            get {
+                return ((string)(this["HTTPHost1"]));
+            }
+            set {
+                this["HTTPHost1"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("localhost")]
+        public string HTTPHost2 {
+            get {
+                return ((string)(this["HTTPHost2"]));
+            }
+            set {
+                this["HTTPHost2"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("localhost")]
+        public string TCPHost {
+            get {
+                return ((string)(this["TCPHost"]));
+            }
+            set {
+                this["TCPHost"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("80")]
+        public string TCPPort {
+            get {
+                return ((string)(this["TCPPort"]));
+            }
+            set {
+                this["TCPPort"] = value;
+            }
+        }
     }
 }

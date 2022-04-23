@@ -349,6 +349,14 @@ namespace OpenFK
                             setRP("Exploring", "Paradox Green", currentBitty, currentBittyName);
                         }
                     }
+
+                    if (Properties.Settings.Default.IsOnline)
+                    {
+                        if (e.args.Contains(@"=""config"""))
+                        {
+                            
+                        }
+                    }
                 }
             }
 
@@ -559,6 +567,12 @@ namespace OpenFK
                 {
                     AS2Container.SetVariable("msg", HTTPPost(e.args, Host).ToString()); //Sends the result of the POST request. It's usually a command for the game to handle.
                 }
+            }
+
+            //TRUNK UPDATE CHECKS
+            if (e.args.Contains("<commands><checktrunkupdate"))
+            {
+                setVar(@"<checktrunkupdate result=""0"" reason=""Everything is up to date."" />");
             }
 
             //UPDATE CHECKS (Not standard netcommands)
@@ -836,6 +850,25 @@ namespace OpenFK
                 {
                     XmlDocument configData = new XmlDocument();
                     configData.LoadXml(filedata);
+
+                    if (Properties.Settings.Default.IsOnline)
+                    {
+                        XmlAttribute host = (XmlAttribute)configData.SelectSingleNode("/settings/host/@value");
+                        host.Value = Properties.Settings.Default.HTTPHost1;
+
+                        XmlAttribute host1 = (XmlAttribute)configData.SelectSingleNode("/settings/host1/@value");
+                        host1.Value = Properties.Settings.Default.HTTPHost2;
+
+                        XmlAttribute tcpHost = (XmlAttribute)configData.SelectSingleNode("/settings/arkone_host/@value");
+                        tcpHost.Value = Properties.Settings.Default.TCPHost;
+
+                        XmlAttribute tcpPort = (XmlAttribute)configData.SelectSingleNode("/settings/arkone_port/@value");
+                        tcpPort.Value = Properties.Settings.Default.TCPPort;
+
+                        filedata = configData.OuterXml;
+                        index = @"<commands><load section=""" + file + @""" name=""" + folder + @""" result=""0"" reason="""">" + filedata + @"</load></commands>";
+                    }
+
                     XmlNodeList xnList1 = configData.SelectNodes("/settings/host"); //filters xml to the load info;
                     foreach (XmlNode xn in xnList1) //fetches the information to load
                     {

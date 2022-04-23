@@ -21,6 +21,13 @@ namespace OpenFK
             QualityCB.SelectedIndex = Properties.Settings.Default.Quality;
             ScaleCB.SelectedIndex = Properties.Settings.Default.ScaleMode;
             USBToggle.Checked = Properties.Settings.Default.USBSupport;
+            OnlineToggle.Checked = Properties.Settings.Default.IsOnline;
+            HTTPBox1.Text = Properties.Settings.Default.HTTPHost1;
+            HTTPBox2.Text = Properties.Settings.Default.HTTPHost2;
+            TCPHostBox.Text = Properties.Settings.Default.TCPHost;
+            TCPPortBox.Text = Properties.Settings.Default.TCPPort;
+            label8.Text = "OpenFK v" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            UpdateTextboxes();
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -59,6 +66,11 @@ namespace OpenFK
 
         private void button1_Click(object sender, EventArgs e)
         {
+            Properties.Settings.Default.HTTPHost1 = HTTPBox1.Text;
+            Properties.Settings.Default.HTTPHost2 = HTTPBox2.Text;
+            Properties.Settings.Default.TCPHost = TCPHostBox.Text;
+            Properties.Settings.Default.TCPPort = TCPPortBox.Text;
+            Properties.Settings.Default.Save();
             Application.Exit();
         }
 
@@ -82,6 +94,36 @@ namespace OpenFK
             else
                 Properties.Settings.Default.USBSupport = false;
             Properties.Settings.Default.Save();
+        }
+
+        private void OnlineToggle_CheckedChanged(object sender, EventArgs e)
+        {
+            if (OnlineToggle.Checked)
+            {
+                Properties.Settings.Default.IsOnline = true;
+            }
+            else
+                Properties.Settings.Default.IsOnline = false;
+            Properties.Settings.Default.Save();
+            UpdateTextboxes();
+        }
+
+        void UpdateTextboxes()
+        {
+            if (Properties.Settings.Default.IsOnline)
+            {
+                HTTPBox1.Enabled = true;
+                HTTPBox2.Enabled = true;
+                TCPHostBox.Enabled = true;
+                TCPPortBox.Enabled = true;
+            }
+            else
+            {
+                HTTPBox1.Enabled = false;
+                HTTPBox2.Enabled = false;
+                TCPHostBox.Enabled = false;
+                TCPPortBox.Enabled = false;
+            }
         }
     }
 }

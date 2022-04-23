@@ -20,5 +20,20 @@
     <Setting Name="USBSupport" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="IsOnline" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="HTTPHost1" Type="System.String" Scope="User">
+      <Value Profile="(Default)">localhost</Value>
+    </Setting>
+    <Setting Name="HTTPHost2" Type="System.String" Scope="User">
+      <Value Profile="(Default)">localhost</Value>
+    </Setting>
+    <Setting Name="TCPHost" Type="System.String" Scope="User">
+      <Value Profile="(Default)">localhost</Value>
+    </Setting>
+    <Setting Name="TCPPort" Type="System.String" Scope="User">
+      <Value Profile="(Default)">80</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
