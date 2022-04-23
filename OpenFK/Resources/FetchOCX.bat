@@ -7,20 +7,20 @@ if %var% lss 3 @echo Your Powershell version is too old to fetch the OCX. Update
 echo Downloading data...
 mkdir tempdl
 cd tempdl
-powershell -Command "Invoke-WebRequest http://download.windowsupdate.com/d/msdownload/update/software/secu/2015/09/windows10.0-kb3087040-x64_ad0f78efb7b122fa9472dbb8050c4f358aceab49.msu -OutFile update.msu"
+powershell -Command "Invoke-WebRequest http://download.windowsupdate.com/c/msdownload/update/software/secu/2019/06/windows10.0-kb4503308-x64_b6478017674279c8ba4f06e60fc3bab04ed7ae02.msu -OutFile update.msu"
 echo Extracting MSU...
 expand -f:* update.msu ./ 
 echo Extracting CAB...
-expand Windows10.0-KB3087040-x64.cab -F:* ./
+expand Windows10.0-KB4503308-x64.cab -F:* ./
 echo Fetching OCX...
 IF EXIST "%PROGRAMFILES(X86)%" (GOTO 64BIT) ELSE (GOTO 32BIT)
 
 :64BIT
-copy "%cd%\amd64_adobe-flash-for-windows_31bf3856ad364e35_10.0.10240.16513_none_33a2f3db043a608d\flash.ocx" "..\Flash.ocx"
+copy "%cd%\amd64_adobe-flash-for-windows_31bf3856ad364e35_10.0.18362.172_none_815470a5fb446c4e\flash.ocx" "..\Flash.ocx"
 GOTO END
 
 :32BIT
-copy "%cd%\wow64_adobe-flash-for-windows_31bf3856ad364e35_10.0.10240.16513_none_3df79e2d389b2288\flash.ocx" "..\Flash.ocx"
+copy "%cd%\wow64_adobe-flash-for-windows_31bf3856ad364e35_10.0.18362.172_none_8ba91af82fa52e49\flash.ocx" "..\Flash.ocx"
 GOTO END
 
 :END

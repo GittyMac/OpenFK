@@ -349,14 +349,6 @@ namespace OpenFK
                             setRP("Exploring", "Paradox Green", currentBitty, currentBittyName);
                         }
                     }
-
-                    if (Properties.Settings.Default.IsOnline)
-                    {
-                        if (e.args.Contains(@"=""config"""))
-                        {
-                            
-                        }
-                    }
                 }
             }
 
