@@ -555,6 +555,26 @@ namespace OpenFK
             if (e.args.Contains("<netcommands"))
             {
                 Debug.WriteLine("[Network] Netcommand called.");
+
+                string tnurl = "";
+                if(e.args.Contains("<netcommands><save_level "))
+                {
+                    XmlDocument request = new XmlDocument(); //e.args to xml
+                    request.LoadXml(e.args);
+                    XmlNodeList xnList = request.SelectNodes("/netcommands/save_level"); //filters xml to the load info
+                    foreach (XmlNode xn in xnList)
+                    {
+                        tnurl = xn.Attributes["tnurl"].Value;
+                    }
+
+                    byte[] tn = File.ReadAllBytes(Directory.GetCurrentDirectory() + tnurl);
+
+                    using(var client = new System.Net.WebClient()) 
+                    {
+                        client.UploadData(Host + tnurl, tn);
+                    }
+                }
+
                 if (DebugOnline == true)
                 {
                     AS2Container.SetVariable("msg", HTTPPost(e.args, Host).ToString()); //Sends the result of the POST request. It's usually a command for the game to handle.
@@ -988,6 +1008,53 @@ namespace OpenFK
             }
             var response = (HttpWebResponse)request.GetResponse();
             var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
+
+            string tnurl = "";
+
+            if(responseString.Contains("<get_level "))
+            {
+                XmlDocument xRequest = new XmlDocument(); //e.args to xml
+                xRequest.LoadXml(responseString);
+                XmlNodeList xnList = xRequest.SelectNodes("/get_level/level"); //filters xml to the load info
+                foreach (XmlNode xn in xnList)
+                {
+                    tnurl = xn.Attributes["tnurl"].Value;
+                }
+
+                using (var client = new System.Net.WebClient())
+                {
+                    client.DownloadFile(Host + tnurl, Directory.GetCurrentDirectory() + tnurl);
+                }
+            }
+            else if (responseString.Contains("<get_top "))
+            {
+                XmlDocument xRequest = new XmlDocument(); //e.args to xml
+                xRequest.LoadXml(responseString);
+                XmlNodeList xnList = xRequest.SelectNodes("/get_top/levels/level"); //filters xml to the load info
+                foreach (XmlNode xn in xnList)
+                {
+                    tnurl = xn.Attributes["tnurl"].Value;
+                    using (var client = new System.Net.WebClient())
+                    {
+                        client.DownloadFile(Host + tnurl, Directory.GetCurrentDirectory() + tnurl);
+                    }
+                }
+            }
+            else if (responseString.Contains("<get_sh_levels "))
+            {
+                XmlDocument xRequest = new XmlDocument(); //e.args to xml
+                xRequest.LoadXml(responseString);
+                XmlNodeList xnList = xRequest.SelectNodes("/get_sh_levels/levels/level"); //filters xml to the load info
+                foreach (XmlNode xn in xnList)
+                {
+                    tnurl = xn.Attributes["tnurl"].Value;
+                    using (var client = new System.Net.WebClient())
+                    {
+                        client.DownloadFile(Host + tnurl, Directory.GetCurrentDirectory() + tnurl);
+                    }
+                }
+            }
+
             return responseString;
         }
         //
