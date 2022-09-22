@@ -557,7 +557,7 @@ namespace OpenFK
                 Debug.WriteLine("[Network] Netcommand called.");
 
                 string tnurl = "";
-                if(e.args.Contains("<netcommands><save_level "))
+                if(e.args.Contains("<save_level "))
                 {
                     XmlDocument request = new XmlDocument(); //e.args to xml
                     request.LoadXml(e.args);
@@ -567,11 +567,9 @@ namespace OpenFK
                         tnurl = xn.Attributes["tnurl"].Value;
                     }
 
-                    byte[] tn = File.ReadAllBytes(Directory.GetCurrentDirectory() + tnurl);
-
                     using(var client = new System.Net.WebClient()) 
                     {
-                        client.UploadData(Host + tnurl, tn);
+                        client.UploadFile(Host + "/" + tnurl, "PUT", Directory.GetCurrentDirectory() + @"\" + tnurl);
                     }
                 }
 
@@ -1018,12 +1016,18 @@ namespace OpenFK
                 XmlNodeList xnList = xRequest.SelectNodes("/get_level/level"); //filters xml to the load info
                 foreach (XmlNode xn in xnList)
                 {
-                    tnurl = xn.Attributes["tnurl"].Value;
+                    if(xn.Attributes.GetNamedItem("tnurl") != null) 
+                    {
+                        tnurl = xn.Attributes["tnurl"].Value;
+                    }
                 }
 
-                using (var client = new System.Net.WebClient())
+                if (tnurl != "")
                 {
-                    client.DownloadFile(Host + tnurl, Directory.GetCurrentDirectory() + tnurl);
+                    using (var client = new System.Net.WebClient())
+                    {
+                        client.DownloadFile(Host + "/" + tnurl, Directory.GetCurrentDirectory() + @"\" + tnurl);
+                    }
                 }
             }
             else if (responseString.Contains("<get_top "))
@@ -1033,10 +1037,16 @@ namespace OpenFK
                 XmlNodeList xnList = xRequest.SelectNodes("/get_top/levels/level"); //filters xml to the load info
                 foreach (XmlNode xn in xnList)
                 {
-                    tnurl = xn.Attributes["tnurl"].Value;
-                    using (var client = new System.Net.WebClient())
+                    if (xn.Attributes.GetNamedItem("tnurl") != null)
                     {
-                        client.DownloadFile(Host + tnurl, Directory.GetCurrentDirectory() + tnurl);
+                        tnurl = xn.Attributes["tnurl"].Value;
+                    }
+                    if (tnurl != "")
+                    {
+                        using (var client = new System.Net.WebClient())
+                        {
+                            client.DownloadFile(Host + "/" + tnurl, Directory.GetCurrentDirectory() + @"\" + tnurl);
+                        }
                     }
                 }
             }
@@ -1047,10 +1057,16 @@ namespace OpenFK
                 XmlNodeList xnList = xRequest.SelectNodes("/get_sh_levels/levels/level"); //filters xml to the load info
                 foreach (XmlNode xn in xnList)
                 {
-                    tnurl = xn.Attributes["tnurl"].Value;
-                    using (var client = new System.Net.WebClient())
+                    if (xn.Attributes.GetNamedItem("tnurl") != null)
                     {
-                        client.DownloadFile(Host + tnurl, Directory.GetCurrentDirectory() + tnurl);
+                        tnurl = xn.Attributes["tnurl"].Value;
+                    }
+                    if(tnurl != "") 
+                    {
+                        using (var client = new System.Net.WebClient())
+                        {
+                            client.DownloadFile(Host + "/" + tnurl, Directory.GetCurrentDirectory() + @"\" + tnurl);
+                        }
                     }
                 }
             }
