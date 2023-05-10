@@ -45,7 +45,7 @@ namespace OpenFK
                     {
                         try
                         {
-                            Application.Run(new Form1());
+                            Application.Run(new Form1(args));
                         }
                         catch
                         {
@@ -57,7 +57,7 @@ namespace OpenFK
                 {
                     try
                     {
-                        Application.Run(new Form1());
+                        Application.Run(new Form1(args));
                     }
                     catch
                     {
