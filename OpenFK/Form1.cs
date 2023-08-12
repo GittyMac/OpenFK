@@ -115,7 +115,7 @@ namespace OpenFK
             AS2Container.ScaleMode = Settings.Default.ScaleMode;
             AS2Container.Movie = Directory.GetCurrentDirectory() + @"\Main.swf"; //Sets Main.swf as the Flash Movie to Play.
             AS2Container.Play(); //Plays Main.swf
-            LogManager.LogToForm("[AS2Container] Main.swf is Loaded");
+            LogManager.LogGeneral("[AS2Container] Main.swf is Loaded");
             AS2Container.FSCommand += new _IShockwaveFlashEvents_FSCommandEventHandler(flashPlayer_FSCommand); //This sets up the FSCommand handler, which CCommunicator likes to use a lot.
 
             try
@@ -124,13 +124,13 @@ namespace OpenFK
                 AS3Container.Quality2 = "High";
                 AS3Container.ScaleMode = Settings.Default.ScaleMode;
                 AS3Container.Movie = Directory.GetCurrentDirectory() + @"\MainAS3.swf"; //Sets MainAS3.swf as the Flash Movie to Play.
-                LogManager.LogToForm("[AS3Container] MainAS3.swf is Loaded");
+                LogManager.LogGeneral("[AS3Container] MainAS3.swf is Loaded");
                 AS3Container.FSCommand += new _IShockwaveFlashEvents_FSCommandEventHandler(flashPlayerAS3_FSCommand);
                 AS3Container.FlashCall += new _IShockwaveFlashEvents_FlashCallEventHandler(flashPlayerAS3_FlashCall);
             }
             catch
             {
-                LogManager.LogToForm("[AS3Container] AS3 Failed to Load! Potentially an older version.");
+                LogManager.LogGeneral("[AS3Container] AS3 Failed to Load! Potentially an older version.");
             }
             //End of Flash initialization
 
@@ -173,7 +173,7 @@ namespace OpenFK
 
         private void flashPlayerAS3_FSCommand(object sender, _IShockwaveFlashEvents_FSCommandEvent e)
         {
-            LogManager.LogToForm("[AS3] [SendMsg] " + e.args);
+            LogManager.LogIncoming("[AS3] [SendMsg] " + e.args);
             if(e.args.Contains("<save_jpeg ")) //Saving jpegs for UG game thumbnails or game over backgrounds.
             {
                 XmlDocument request = new XmlDocument(); //e.args to xml
@@ -241,7 +241,7 @@ namespace OpenFK
                 if (s != usbBittyID) //If it's still the same, it won't repeat the actions
                 {
                     usbBittyID = s;
-                    LogManager.LogToForm("[Bitty] USB bitty - " + s);
+                    LogManager.LogGeneral("[Bitty] USB bitty - " + s);
                     setBitty(s);
                 }
             }
@@ -257,7 +257,7 @@ namespace OpenFK
 
         private void flashPlayerAS3_FlashCall(object sender, _IShockwaveFlashEvents_FlashCallEvent e)
         {
-            LogManager.LogToForm("[AS3] [FlashCall] " + e.request);
+            LogManager.LogIncoming("[AS3] [FlashCall] " + e.request);
             if(e.request.Contains("<as3_loaded "))
             {
                 setVar(@"<?xml version=""1.0"" encoding=""UTF - 8""?><commands><as3_loaded id=""1"" path=""MainAS3.swf"" result=""0"" err="""" /></commands>");
@@ -285,7 +285,20 @@ namespace OpenFK
 
         void flashPlayer_FSCommand(object sender, _IShockwaveFlashEvents_FSCommandEvent e) //FSCommand Handler
         {
-            LogManager.LogToForm("[AS2] [SendMsg] " + e.args);
+            if (e.args.Contains("<log")) // logs from modified CLogger
+            {
+                var log = new XmlDocument();
+                log.LoadXml(e.args);
+                var node = log.SelectSingleNode("/log");
+
+                string level = node.Attributes["type"].Value;
+                string message = node.InnerText;
+                LogManager.LogLog(message, level);
+            }
+            else
+            {   // Don't log incoming message that are logs to prevent clutter.
+                LogManager.LogIncoming("[AS2] [SendMsg] " + e.args);
+            }
 
             //
             // XML LOAD COMMANDS
@@ -304,7 +317,8 @@ namespace OpenFK
                     //XML LOADING
                     filename = xn.Attributes["section"].Value;
                     foldername = xn.Attributes["name"].Value;
-                    LogManager.LogToForm("[Load] File Requested - " + filename + "/" + foldername);
+
+                    LogManager.LogFile($"[Load] {foldername}/{filename}");
                     loadFile(filename, foldername);
 
                     //Rich Prescense
@@ -394,7 +408,8 @@ namespace OpenFK
                 {
                     filename = xn.Attributes["section"].Value;
                     foldername = xn.Attributes["name"].Value;
-                    LogManager.LogToForm("[Save] File Requested - " + filename + "/" + foldername); //debug output
+
+                    LogManager.LogFile($"[Save] {foldername}/{filename}");
 
                     XDocument args = XDocument.Parse(e.args);
 
@@ -417,7 +432,7 @@ namespace OpenFK
                         File.WriteAllBytes(Directory.GetCurrentDirectory() + @"\data\" + foldername + @"\" + filename + ".rdf", iso_8859_1.GetBytes(RDFTool.encode(iso_8859_1.GetString(RDFData))));
                     }
                     else File.WriteAllText(Directory.GetCurrentDirectory() + @"\data\" + foldername + @"\" + filename + ".xml", output.ToString()); //saves
-                    LogManager.LogToForm("[Save] Successfully saved - " + foldername + "/" + filename); //Debug Output
+                    LogManager.LogFile("[Save] Successfully saved - " + foldername + "/" + filename); //Debug Output
                 }
             }
 
@@ -507,7 +522,7 @@ namespace OpenFK
                     var updateprocess = Process.Start(updatescript);
                 }
                 Application.Exit(); //Closes OpenFK
-                LogManager.LogToForm("[OpenFK] Radicaclose was called"); //Debug output
+                LogManager.LogGeneral("[OpenFK] Radicaclose was called"); //Debug output
             }
 
             //
@@ -560,7 +575,7 @@ namespace OpenFK
             //HTTP POST (CRIB SAVING + POSTCARDS)
             if (e.args.Contains("<netcommands"))
             {
-                LogManager.LogToForm("[Network] Netcommand called.");
+                LogManager.LogNetwork("Netcommand called.", "NetCommand");
 
                 string tnurl = "";
                 if(e.args.Contains("<save_level "))
@@ -598,7 +613,7 @@ namespace OpenFK
                 string localVerNum = "1.8";
                 string fslocalVersion = "";
                 string fslocalVerNum = "1.0";
-                LogManager.LogToForm("[Network] [Update] Update Requested");
+                LogManager.LogNetwork("[Update] Update Requested", "NetCommand");
                 setVar(@"<progress percent=""0.25"" />");
                 try
                 {
@@ -608,21 +623,21 @@ namespace OpenFK
                 }
                 catch
                 {
-                    LogManager.LogToForm("[Network] [Update] Update.xml was not found");
+                    LogManager.LogNetwork("[Update] Update.xml was not found", "NetCommand");
                 }
                 setVar(@"<progress percent=""25.00"" />");
                 try
                 {
-                    LogManager.LogToForm("[Network] [Update] Downloading Update.xml from GitHub");
+                    LogManager.LogNetwork("[Update] Downloading Update.xml from GitHub", "NetCommand");
                     netStore = XDocument.Parse(Get(@"https://raw.githubusercontent.com/GittyMac/OpenFK/master/update.xml"));
-                    LogManager.LogToForm("[Network] [Update] Update.xml was downloaded");
+                    LogManager.LogNetwork("[Update] Update.xml was downloaded", "NetCommand");
                     string netVersion = netStore.Root.Attribute("name").Value;
                     string netVersionNum = netStore.Root.Attribute("version").Value;
                     string netVersionSize = netStore.Root.Attribute("size").Value;
                     setVar(@"<progress percent=""50.00"" />");
                     if (localVersion != netVersion)
                     {
-                        LogManager.LogToForm("[Network] [Update] An update is needed");
+                        LogManager.LogNetwork("[Update] An update is needed", "NetCommand");
                         netStore.Save(Directory.GetCurrentDirectory() + @"\update.xml");
                         setVar(@"<checkupdate result=""2"" reason=""New version of OpenFK found."" version=""2009_07_16_544"" size=""" + netVersionSize + @""" curversion=""" + localVerNum + @""" extversion=""" + netVersionNum + @""" extname=""" + netVersion + @""" />");
                     }
@@ -636,14 +651,14 @@ namespace OpenFK
                         }
                         catch
                         {
-                            LogManager.LogToForm("[Network] [Update] FSGUI Update.xml was not found");
+                            LogManager.LogNetwork("[Update] FSGUI Update.xml was not found", "NetCommand");
                         }
                         setVar(@"<progress percent=""75.00"" />");
                         try
                         {
-                            LogManager.LogToForm("[Network] [Update] Downloading FSGUI Update.xml from GitHub");
+                            LogManager.LogNetwork("[Update] Downloading FSGUI Update.xml from GitHub", "NetCommand");
                             fsnetStore = XDocument.Parse(Get(@"https://raw.githubusercontent.com/GittyMac/FunkeySelectorGUI/master/update.xml"));
-                            LogManager.LogToForm("[Network] [Update] FSGUI Update.xml was downloaded");
+                            LogManager.LogNetwork("[Update] FSGUI Update.xml was downloaded", "NetCommand");
                             string fsnetVersion = fsnetStore.Root.Attribute("name").Value;
                             string fsnetVersionNum = fsnetStore.Root.Attribute("version").Value;
                             string fsnetVersionSize = fsnetStore.Root.Attribute("size").Value;
@@ -657,9 +672,9 @@ namespace OpenFK
                                 }
                                 catch
                                 {
-                                    LogManager.LogToForm("[Network] [Update] Cannot close FSGUI");
+                                    LogManager.LogNetwork("[Update] Cannot close FSGUI", "NetCommand");
                                 }
-                                LogManager.LogToForm("[Network] [Update] A FSGUI update is needed");
+                                LogManager.LogNetwork("[Update] A FSGUI update is needed", "NetCommand");
                                 setVar(@"<checkupdate result=""2"" reason=""New version of FSGUI found."" version=""2009_07_16_544"" size=""" + fsnetVersionSize + @""" curversion=""" + fslocalVerNum + @""" extversion=""" + fsnetVersionNum + @""" extname=""" + fsnetVersion + @""" />");
                             }
                             else
@@ -669,7 +684,7 @@ namespace OpenFK
                         }
                         catch
                         {
-                            LogManager.LogToForm("[Network] [Update] No FSGUI update");
+                            LogManager.LogNetwork("[Update] No FSGUI update", "NetCommand");
                             setVar(@"<checkupdate result=""1"" reason=""Could not find the FunkeySelectorGUI update!"" />");
                         }
                     }
@@ -680,7 +695,7 @@ namespace OpenFK
                 }
                 catch
                 {
-                    LogManager.LogToForm("[Network] [Update] No update");
+                    LogManager.LogNetwork("[Update] No update", "NetCommand");
                     setVar(@"<checkupdate result=""1"" reason=""Could not find the OpenFK update!"" />");
                 }
             }
@@ -759,7 +774,7 @@ namespace OpenFK
                     savepassword = xn.Attributes["savepassword"].Value;
                     hintq = xn.Attributes["hintq"].Value;
                     hinta = xn.Attributes["hinta"].Value;
-                    LogManager.LogToForm("[Load] File Requested - system/users");
+                    LogManager.LogFile("[Load] File Requested - system/users");
                     loadFile("users", "system");
                     string userString = userData.OuterXml;
                     string data2send = userString.Replace("</users>", "") + @"<user gname=""" + username + @""" hinta=""" + hinta + @""" hintq=""" + hintq + @""" savepassword=""" + savepassword + @""" password=""" + password + @""" name=""" + username + @""" /></users>";
@@ -774,7 +789,7 @@ namespace OpenFK
                         File.WriteAllBytes(Directory.GetCurrentDirectory() + @"\data\" + "system" + @"\" + "users" + ".rdf", iso_8859_1.GetBytes(RDFTool.encode(iso_8859_1.GetString(RDFData))));
                     }
                     else File.WriteAllText(Directory.GetCurrentDirectory() + @"\data\" + "system" + @"\" + "users" + ".xml", data2send.ToString()); //saves
-                    LogManager.LogToForm("[UserAdd] Successfully added user - " + username); //Debug Output
+                    LogManager.LogFile("[UserAdd] Successfully added user - " + username); //Debug Output
                 }
             }
 
@@ -916,7 +931,7 @@ namespace OpenFK
                 index = @"<commands><load section=""" + file + @""" name=""" + folder + @""" result=""1"" reason=""Error loading file!"" /></commands>"; //I would just let dotNET handle this, but UGLevels needs an error to continue.
             }
             setVar(index.ToString()); //Sends XML data to the game
-            LogManager.LogToForm("[Load] Successfully loaded - " + folder + "/" + file); //Debug Output
+            LogManager.LogFile("[Load] Successfully loaded - " + folder + "/" + file); //Debug Output
         }
 
         //
@@ -929,7 +944,7 @@ namespace OpenFK
 
         public void setVar(string msg)
         {
-            LogManager.LogToForm("[SetVar/Return] Returned Message - " + msg);
+            LogManager.LogOutgoing("[SetVar/Return] Returned Message - " + msg);
             AS2Container.SetVariable("msg", msg); //Sends message (msg) to the game
         }
 
@@ -1002,6 +1017,8 @@ namespace OpenFK
         //
         public string HTTPPost(string info, string uri)
         {
+            LogManager.LogNetwork($"{uri} {info}", "POST");
+
             var request = (HttpWebRequest)WebRequest.Create(uri);
             var data = Encoding.ASCII.GetBytes(info);
             request.Method = "POST";
@@ -1089,6 +1106,8 @@ namespace OpenFK
         //
         public string Get(string uri)
         {
+            LogManager.LogNetwork(uri, "GET");
+
             ServicePointManager.Expect100Continue = true;
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
