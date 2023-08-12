@@ -16,7 +16,30 @@ namespace OpenFK
         public DebugWindow()
         {
             InitializeComponent();
-            LogManager.debugLogText = generalLog;
+
+            LogManager.generalLogs = generalLogs;
+            LogManager.fileLogs = fileLogs;
+            LogManager.incomingLogs = incomingLogs;
+            LogManager.outgoingLogs = outgoingLogs;
+
+            LogManager.CLogger = new Dictionary<string, RichTextBox>
+            {
+                { "all", CLoggerAll },
+                { "trace", CLoggerTrace },
+                { "debug", CLoggerDebug },
+                { "info", CLoggerInfo },
+                { "warning", CLoggerWarning },
+                { "error", CLoggerError },
+                { "fatal", CLoggerFatal }
+            };
+
+            LogManager.networkLogs = new Dictionary<string, RichTextBox>
+            {
+                { "All", NetworkAllLogs },
+                { "GET", NetworkGetLogs },
+                { "POST", NetworkPostLogs },
+                { "NetCommand", NetworkCommandLogs }
+            };
         }
     }
 }
