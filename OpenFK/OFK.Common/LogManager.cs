@@ -63,7 +63,7 @@ namespace OpenFK.OFK.Common
         {
             message = $"[{method}] {message}";
             AppendLine(networkLogs[method], message);
-            AppendLine(networkLogs["ALL"], message);
+            AppendLine(networkLogs["All"], message);
             LogGeneral($"[Network] {message}");
         }
     }
