@@ -432,7 +432,7 @@ namespace OpenFK
                         File.WriteAllBytes(Directory.GetCurrentDirectory() + @"\data\" + foldername + @"\" + filename + ".rdf", iso_8859_1.GetBytes(RDFTool.encode(iso_8859_1.GetString(RDFData))));
                     }
                     else File.WriteAllText(Directory.GetCurrentDirectory() + @"\data\" + foldername + @"\" + filename + ".xml", output.ToString()); //saves
-                    LogManager.LogFile("[Save] Successfully saved - " + foldername + "/" + filename); //Debug Output
+                    LogManager.LogFile($"[Save] [Success] {foldername}/{filename}");
                 }
             }
 
@@ -522,7 +522,7 @@ namespace OpenFK
                     var updateprocess = Process.Start(updatescript);
                 }
                 Application.Exit(); //Closes OpenFK
-                LogManager.LogGeneral("[OpenFK] Radicaclose was called"); //Debug output
+                LogManager.LogGeneral("[OpenFK] Radicaclose was called");
             }
 
             //
@@ -789,7 +789,7 @@ namespace OpenFK
                         File.WriteAllBytes(Directory.GetCurrentDirectory() + @"\data\" + "system" + @"\" + "users" + ".rdf", iso_8859_1.GetBytes(RDFTool.encode(iso_8859_1.GetString(RDFData))));
                     }
                     else File.WriteAllText(Directory.GetCurrentDirectory() + @"\data\" + "system" + @"\" + "users" + ".xml", data2send.ToString()); //saves
-                    LogManager.LogFile("[UserAdd] Successfully added user - " + username); //Debug Output
+                    LogManager.LogFile("[UserAdd] [Succes] " + username);
                 }
             }
 
@@ -931,7 +931,7 @@ namespace OpenFK
                 index = @"<commands><load section=""" + file + @""" name=""" + folder + @""" result=""1"" reason=""Error loading file!"" /></commands>"; //I would just let dotNET handle this, but UGLevels needs an error to continue.
             }
             setVar(index.ToString()); //Sends XML data to the game
-            LogManager.LogFile("[Load] Successfully loaded - " + folder + "/" + file); //Debug Output
+            LogManager.LogFile($"[Load] [Success] {folder}/{file}");
         }
 
         //
