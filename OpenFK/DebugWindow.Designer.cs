@@ -64,6 +64,8 @@ namespace OpenFK
             this.NetworkPostLogs = new System.Windows.Forms.RichTextBox();
             this.NetworkCommandTab = new System.Windows.Forms.TabPage();
             this.NetworkCommandLogs = new System.Windows.Forms.RichTextBox();
+            this.staticStorageTab = new System.Windows.Forms.TabPage();
+            this.staticStorageLogs = new System.Windows.Forms.RichTextBox();
             this.tabControl1.SuspendLayout();
             this.logTab.SuspendLayout();
             this.FileLogsTab.SuspendLayout();
@@ -84,6 +86,7 @@ namespace OpenFK
             this.NetworkGetTab.SuspendLayout();
             this.NetworkPostTab.SuspendLayout();
             this.NetworkCommandTab.SuspendLayout();
+            this.staticStorageTab.SuspendLayout();
             this.SuspendLayout();
             // 
             // generalLogs
@@ -104,6 +107,7 @@ namespace OpenFK
             this.tabControl1.Controls.Add(this.outgoing);
             this.tabControl1.Controls.Add(this.CLogger);
             this.tabControl1.Controls.Add(this.network);
+            this.tabControl1.Controls.Add(this.staticStorageTab);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
@@ -460,6 +464,26 @@ namespace OpenFK
             this.NetworkCommandLogs.TabIndex = 2;
             this.NetworkCommandLogs.Text = "";
             // 
+            // staticStorageTab
+            // 
+            this.staticStorageTab.Controls.Add(this.staticStorageLogs);
+            this.staticStorageTab.Location = new System.Drawing.Point(4, 22);
+            this.staticStorageTab.Name = "staticStorageTab";
+            this.staticStorageTab.Size = new System.Drawing.Size(599, 429);
+            this.staticStorageTab.TabIndex = 7;
+            this.staticStorageTab.Text = "CStaticStorage";
+            this.staticStorageTab.UseVisualStyleBackColor = true;
+            // 
+            // staticStorageLogs
+            // 
+            this.staticStorageLogs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.staticStorageLogs.Location = new System.Drawing.Point(0, 0);
+            this.staticStorageLogs.Name = "staticStorageLogs";
+            this.staticStorageLogs.ReadOnly = true;
+            this.staticStorageLogs.Size = new System.Drawing.Size(599, 429);
+            this.staticStorageLogs.TabIndex = 0;
+            this.staticStorageLogs.Text = "";
+            // 
             // DebugWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -488,6 +512,7 @@ namespace OpenFK
             this.NetworkGetTab.ResumeLayout(false);
             this.NetworkPostTab.ResumeLayout(false);
             this.NetworkCommandTab.ResumeLayout(false);
+            this.staticStorageTab.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -529,5 +554,7 @@ namespace OpenFK
         private System.Windows.Forms.RichTextBox NetworkPostLogs;
         private System.Windows.Forms.TabPage NetworkCommandTab;
         private System.Windows.Forms.RichTextBox NetworkCommandLogs;
+        private System.Windows.Forms.TabPage staticStorageTab;
+        private System.Windows.Forms.RichTextBox staticStorageLogs;
     }
 }

@@ -285,6 +285,9 @@ namespace OpenFK
 
         void flashPlayer_FSCommand(object sender, _IShockwaveFlashEvents_FSCommandEvent e) //FSCommand Handler
         {
+            // We put these here because these use a different xml scheme and to prevent clutter in the general logs.
+            // It is also important to return, since only we call this and know to not put anything else in it to prevent bugs due to bad code below.
+
             if (e.args.Contains("<log")) // logs from modified CLogger
             {
                 var log = new XmlDocument();
@@ -294,6 +297,38 @@ namespace OpenFK
                 string level = node.Attributes["type"].Value;
                 string message = node.InnerText;
                 LogManager.LogLog(message, level);
+                return;
+            }
+            else if (e.args.Contains("<staticstorage"))
+            {
+                var log = new XmlDocument();
+                log.LoadXml(e.args);
+                var node = log.SelectSingleNode("/commands/staticstorage");
+
+                string type = node.Attributes["type"].Value;
+                string key = WebUtility.UrlDecode(node.Attributes["key"].Value);
+
+                switch (type)
+                {
+                    case "get":
+                        string value = WebUtility.UrlDecode(node.Attributes["value"].Value);
+                        string defaultValue = WebUtility.UrlDecode(node.Attributes["defaultvalue"].Value);
+                        LogManager.LogStaticStorageGet(key, value, defaultValue);
+                        break;
+
+                    case "set":
+                        string oldValue = WebUtility.UrlDecode(node.Attributes["original"].Value);
+                        string newValue = WebUtility.UrlDecode(node.Attributes["value"].Value); ;
+                        LogManager.LogStaticStorageSet(key, oldValue, newValue);
+                        break;
+
+                    case "delete":
+                        string original = WebUtility.UrlDecode(node.Attributes["original"].Value);
+                        LogManager.LogStaticStorageDelete(key, original);
+                        break;
+
+                }
+                return;
             }
             else
             {   // Don't log incoming message that are logs to prevent clutter.

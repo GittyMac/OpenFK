@@ -40,6 +40,8 @@ namespace OpenFK
                 { "POST", NetworkPostLogs },
                 { "NetCommand", NetworkCommandLogs }
             };
+
+            LogManager.staticStorageLogs = staticStorageLogs;
         }
     }
 }
