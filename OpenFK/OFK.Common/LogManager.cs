@@ -16,6 +16,7 @@ namespace OpenFK.OFK.Common
         public static RichTextBox outgoingLogs;
         public static Dictionary<string, RichTextBox> CLogger;
         public static Dictionary<string, RichTextBox> networkLogs;
+        public static RichTextBox staticStorageLogs;
 
         private static void AppendLine(RichTextBox richTextBox, string message)
         {
@@ -65,6 +66,25 @@ namespace OpenFK.OFK.Common
             AppendLine(networkLogs[method], message);
             AppendLine(networkLogs["All"], message);
             LogGeneral($"[Network] {message}");
+        }
+
+        //TODO: implement table view to keep track of values like the localstorage viewer in devtools
+        public static void LogStaticStorageSet(string key, string oldValue, string newValue)
+        {
+            string message = $"[Set] {key} = {oldValue} --> {newValue}";
+            AppendLine(staticStorageLogs, message);
+        }
+
+        public static void LogStaticStorageGet(string key, string value, string defaultValue)
+        {
+            string message = $"[Get] {key} = {value} || {defaultValue}";
+            AppendLine(staticStorageLogs, message);
+        }
+
+        public static void LogStaticStorageDelete(string key, string oldValue)
+        {
+            string message = $"[Delete] {key} = {oldValue}";
+            AppendLine(staticStorageLogs, message);
         }
     }
 }
