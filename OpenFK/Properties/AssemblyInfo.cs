@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("OpenFK")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("An open source replacement for the U.B. Funkeys executable.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("GittyMac")]
+[assembly: AssemblyCompany("Lako")]
 [assembly: AssemblyProduct("OpenFK")]
-[assembly: AssemblyCopyright("Copyright © GittyMac 2023")]
+[assembly: AssemblyCopyright("Copyright © Lako 2024")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

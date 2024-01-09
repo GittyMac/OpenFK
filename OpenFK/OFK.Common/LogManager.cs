@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace OpenFK.OFK.Common
@@ -20,13 +16,16 @@ namespace OpenFK.OFK.Common
 
         private static void AppendLine(RichTextBox richTextBox, string message)
         {
-            try
+            if (Globals.IsDebug)
             {
-                richTextBox.AppendText("\n" + message);
-            }
-            catch
-            {
-                Debug.WriteLine($"[{richTextBox.Name}] {message}");
+                try
+                {
+                    richTextBox.AppendText("\n" + message);
+                }
+                catch
+                {
+                    Debug.WriteLine($"[{richTextBox.Name}] {message}");
+                }
             }
         }
 

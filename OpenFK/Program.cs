@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using OpenFK.OFK.Net;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace OpenFK
@@ -18,17 +19,30 @@ namespace OpenFK
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            if (File.Exists(Directory.GetCurrentDirectory() + @"\update.bat"))
+
+            if (args.Contains("/update"))
             {
-                File.Delete(Directory.GetCurrentDirectory() + @"\update.bat");
+                Thread.Sleep(500);
+                UpdateManager.InstallUpdate();
+                return;
             }
+            else if (Directory.Exists(Directory.GetCurrentDirectory() + @"\tmpdl"))
+            {
+                Thread.Sleep(500);
+                Directory.Delete(Directory.GetCurrentDirectory() + @"\tmpdl", true);
+                if (File.Exists(Directory.GetCurrentDirectory() + @"\tmpdl.zip"))
+                {
+                    File.Delete(Directory.GetCurrentDirectory() + @"\tmpdl.zip");
+                }
+            }
+
             if (args.Contains("/config"))
             {
                 Application.Run(new ConfigForm());
             }
             else if (File.Exists(Directory.GetCurrentDirectory() + @"\Flash.ocx"))
             {
-                if(CalculateMD5(Directory.GetCurrentDirectory() + @"\Flash.ocx") == "0c8fbd12f40dcd5a1975b671f9989900" ||
+                if (CalculateMD5(Directory.GetCurrentDirectory() + @"\Flash.ocx") == "0c8fbd12f40dcd5a1975b671f9989900" ||
                    CalculateMD5(Directory.GetCurrentDirectory() + @"\Flash.ocx") == "28642aa6626e42701677a1f3822306b0")
                 {
                     if (MessageBox.Show("The current Flash.ocx is a buggy version! It causes several problems in the game. Do you want to fetch a compatible OCX?", "OpenFK", MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes)
@@ -45,7 +59,7 @@ namespace OpenFK
                     {
                         try
                         {
-                            Application.Run(new Form1(args));
+                            Application.Run(new GameForm(args));
                         }
                         catch
                         {
@@ -57,14 +71,16 @@ namespace OpenFK
                 {
                     try
                     {
-                        Application.Run(new Form1(args));
+                        Application.Run(new GameForm(args));
                     }
                     catch
                     {
+                        throw;
                         MessageBox.Show("There was an error starting the game! This could happen because of a 64 bit OCX running on a 32 bit OpenFK.", "OpenFK", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
-            }else if (MessageBox.Show("Flash.ocx is not found! Do you want to fetch a compatible OCX?", "OpenFK", MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes)
+            }
+            else if (MessageBox.Show("Flash.ocx is not found! Do you want to fetch a compatible OCX?", "OpenFK", MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes)
             {
                 File.WriteAllText(Directory.GetCurrentDirectory() + @"\FetchOCX.bat", Properties.Resources.FetchOCX);
                 ProcessStartInfo fetchocx = new ProcessStartInfo(Directory.GetCurrentDirectory() + @"\FetchOCX.bat");
@@ -80,7 +96,7 @@ namespace OpenFK
         {
             using (var md5 = MD5.Create())
             {
-                using (var stream = File.OpenRead(filename)) 
+                using (var stream = File.OpenRead(filename))
                 {
                     var hash = md5.ComputeHash(stream); //Computes the MD5 hash of the swf.
                     return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant(); //Converts the hash to a readable string to compare.

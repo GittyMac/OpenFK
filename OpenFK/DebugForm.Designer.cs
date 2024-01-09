@@ -1,7 +1,7 @@
 ﻿
 namespace OpenFK
 {
-    partial class DebugWindow
+    partial class DebugForm
     {
         /// <summary>
         /// Required designer variable.
@@ -29,6 +29,7 @@ namespace OpenFK
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DebugForm));
             this.generalLogs = new System.Windows.Forms.RichTextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.logTab = new System.Windows.Forms.TabPage();
@@ -92,6 +93,7 @@ namespace OpenFK
             // generalLogs
             // 
             this.generalLogs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.generalLogs.HideSelection = false;
             this.generalLogs.Location = new System.Drawing.Point(3, 3);
             this.generalLogs.Name = "generalLogs";
             this.generalLogs.ReadOnly = true;
@@ -140,6 +142,7 @@ namespace OpenFK
             // fileLogs
             // 
             this.fileLogs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.fileLogs.HideSelection = false;
             this.fileLogs.Location = new System.Drawing.Point(3, 3);
             this.fileLogs.Name = "fileLogs";
             this.fileLogs.ReadOnly = true;
@@ -161,6 +164,7 @@ namespace OpenFK
             // incomingLogs
             // 
             this.incomingLogs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.incomingLogs.HideSelection = false;
             this.incomingLogs.Location = new System.Drawing.Point(3, 3);
             this.incomingLogs.Name = "incomingLogs";
             this.incomingLogs.ReadOnly = true;
@@ -181,6 +185,7 @@ namespace OpenFK
             // outgoingLogs
             // 
             this.outgoingLogs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.outgoingLogs.HideSelection = false;
             this.outgoingLogs.Location = new System.Drawing.Point(0, 0);
             this.outgoingLogs.Name = "outgoingLogs";
             this.outgoingLogs.ReadOnly = true;
@@ -229,6 +234,7 @@ namespace OpenFK
             // CLoggerAll
             // 
             this.CLoggerAll.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CLoggerAll.HideSelection = false;
             this.CLoggerAll.Location = new System.Drawing.Point(3, 3);
             this.CLoggerAll.Name = "CLoggerAll";
             this.CLoggerAll.ReadOnly = true;
@@ -250,6 +256,7 @@ namespace OpenFK
             // CLoggerTrace
             // 
             this.CLoggerTrace.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CLoggerTrace.HideSelection = false;
             this.CLoggerTrace.Location = new System.Drawing.Point(3, 3);
             this.CLoggerTrace.Name = "CLoggerTrace";
             this.CLoggerTrace.ReadOnly = true;
@@ -270,6 +277,7 @@ namespace OpenFK
             // CLoggerDebug
             // 
             this.CLoggerDebug.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CLoggerDebug.HideSelection = false;
             this.CLoggerDebug.Location = new System.Drawing.Point(0, 0);
             this.CLoggerDebug.Name = "CLoggerDebug";
             this.CLoggerDebug.ReadOnly = true;
@@ -290,6 +298,7 @@ namespace OpenFK
             // CLoggerInfo
             // 
             this.CLoggerInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CLoggerInfo.HideSelection = false;
             this.CLoggerInfo.Location = new System.Drawing.Point(0, 0);
             this.CLoggerInfo.Name = "CLoggerInfo";
             this.CLoggerInfo.ReadOnly = true;
@@ -310,6 +319,7 @@ namespace OpenFK
             // CLoggerWarning
             // 
             this.CLoggerWarning.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CLoggerWarning.HideSelection = false;
             this.CLoggerWarning.Location = new System.Drawing.Point(0, 0);
             this.CLoggerWarning.Name = "CLoggerWarning";
             this.CLoggerWarning.ReadOnly = true;
@@ -330,6 +340,7 @@ namespace OpenFK
             // CLoggerError
             // 
             this.CLoggerError.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CLoggerError.HideSelection = false;
             this.CLoggerError.Location = new System.Drawing.Point(0, 0);
             this.CLoggerError.Name = "CLoggerError";
             this.CLoggerError.ReadOnly = true;
@@ -350,6 +361,7 @@ namespace OpenFK
             // CLoggerFatal
             // 
             this.CLoggerFatal.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CLoggerFatal.HideSelection = false;
             this.CLoggerFatal.Location = new System.Drawing.Point(0, 0);
             this.CLoggerFatal.Name = "CLoggerFatal";
             this.CLoggerFatal.ReadOnly = true;
@@ -395,6 +407,7 @@ namespace OpenFK
             // NetworkAllLogs
             // 
             this.NetworkAllLogs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.NetworkAllLogs.HideSelection = false;
             this.NetworkAllLogs.Location = new System.Drawing.Point(3, 3);
             this.NetworkAllLogs.Name = "NetworkAllLogs";
             this.NetworkAllLogs.ReadOnly = true;
@@ -416,6 +429,7 @@ namespace OpenFK
             // NetworkGetLogs
             // 
             this.NetworkGetLogs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.NetworkGetLogs.HideSelection = false;
             this.NetworkGetLogs.Location = new System.Drawing.Point(3, 3);
             this.NetworkGetLogs.Name = "NetworkGetLogs";
             this.NetworkGetLogs.ReadOnly = true;
@@ -436,6 +450,7 @@ namespace OpenFK
             // NetworkPostLogs
             // 
             this.NetworkPostLogs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.NetworkPostLogs.HideSelection = false;
             this.NetworkPostLogs.Location = new System.Drawing.Point(0, 0);
             this.NetworkPostLogs.Name = "NetworkPostLogs";
             this.NetworkPostLogs.ReadOnly = true;
@@ -457,6 +472,7 @@ namespace OpenFK
             // NetworkCommandLogs
             // 
             this.NetworkCommandLogs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.NetworkCommandLogs.HideSelection = false;
             this.NetworkCommandLogs.Location = new System.Drawing.Point(3, 3);
             this.NetworkCommandLogs.Name = "NetworkCommandLogs";
             this.NetworkCommandLogs.ReadOnly = true;
@@ -477,6 +493,7 @@ namespace OpenFK
             // staticStorageLogs
             // 
             this.staticStorageLogs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.staticStorageLogs.HideSelection = false;
             this.staticStorageLogs.Location = new System.Drawing.Point(0, 0);
             this.staticStorageLogs.Name = "staticStorageLogs";
             this.staticStorageLogs.ReadOnly = true;
@@ -484,13 +501,14 @@ namespace OpenFK
             this.staticStorageLogs.TabIndex = 0;
             this.staticStorageLogs.Text = "";
             // 
-            // DebugWindow
+            // DebugForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(607, 455);
             this.Controls.Add(this.tabControl1);
-            this.Name = "DebugWindow";
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Name = "DebugForm";
             this.Text = "OpenFK - Debug";
             this.tabControl1.ResumeLayout(false);
             this.logTab.ResumeLayout(false);
