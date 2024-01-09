@@ -88,7 +88,11 @@ namespace OpenFK.OFK.Core
                 Process MBRun = new Process();
                 ProcessStartInfo MBData = new ProcessStartInfo();
                 MBData.FileName = Directory.GetParent(Directory.GetCurrentDirectory()) + @"\MegaByte\" + "MegaByte.exe";
-                MBData.Arguments = "-MBRun -MBDebug";
+                if (Globals.IsDebug) 
+                    MBData.Arguments = "-MBRun -MBDebug";
+                else 
+                    MBData.Arguments = "-MBRun";
+                
                 MBData.UseShellExecute = false;
                 MBData.WindowStyle = ProcessWindowStyle.Minimized;
                 MBRun.StartInfo = MBData;
