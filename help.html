@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel="icon" href="faviconw.ico" type="image/x-icon" />
+        <link rel="icon" href="favicon.ico" type="image/x-icon" />
         <title>OpenFK</title>
         <link rel="stylesheet" href="style.css">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,32 +10,36 @@
         <meta property="og:title" content="OpenFK Help" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://gittymac.github.io/OpenFK/help.html" />
-        <meta property="og:image" content="https://gittymac.github.io/OpenFK/logow.png" />
+        <meta property="og:image" content="https://gittymac.github.io/OpenFK/logo.png" />
         <meta property="og:description" content="OpenFK is an open source replacement for the U.B. Funkeys executable." />
     </head>
 
-    <div class="sidenav">
-        <a href="index.html">Home</a>
-        <a href="dl.html">Downloads</a>
-        <a>Help</a>
-        <a href="https://github.com/GittyMac/OpenFK">Github</a>
-      </div>
-
     <body>
-        <marquee style="padding-top: 10px;" scrollamount="10">OpenFK 2.0 now out!</marquee>
-        <img src="logow.png" alt="OpenFK Logo with Wrench"/>
-        <h1>OpenFK Help</h1>
-        <h3>Common issues and solutions</h3>
+        <div class="sidenav">
+            <a href="index.html"><img src="logo.svg" width="32px" alt="OpenFK Logo" style='vertical-align: middle;' />
+                <b>OpenFK</b></a>
+            <a> | </a>
+            <a href="index.html">Home</a>
+            <a href="dl.html">Downloads</a>
+            <a><b>Help</b></a>
+            <a href="https://github.com/GittyMac/OpenFK">Github</a>
+        </div>
 
-        <h2>It says I have no OCX!</h2>
-        <p>There will be a popup that will ask you if you want to install Flash.OCX</p>
-        <h2>My USB isn't working!</h2>
-        <p>Make sure the MegaByte drivers are properly installed and that USB support is enabled in OpenFK.</p>
-        <h2>A game from Paradox Green isn't working properly!</h2>
-        <p>Actionscript 3 support is currently fairly experimental, so expect some bugs.</p>
-        <h2>I can't go online!</h2>
-        <p>There are currently no active servers, so you will have to play offline.</p>
-        <h2>The game doesn't look properly scaled!</h2>
-        <p>This one is a strange one. The way the game scales is not that good, and will result in some glitches which depends on the resolution. <br> Try using the 'Stretch 4:3' option which will use the original 800x600 resolution.</p>
+        <div class="center">
+        <h1>OpenFK Help</h1>
+        <p>This page will contain several pieces of advice about using OpenFK.</p>
+        <h2>Incompatibilities</h2>
+        <p>OpenFK has been made to closely mimic the original UBFunkeys.exe, reaching near feature parity since v1.5. However, due to the way OpenFK was made, it can still have issues that only occur with OpenFK. These primarily occur in areas that have not been fully implemented and tested. These include the Paradox Green minigames and network connectivity. If you can find replicable errors with OpenFK, make sure to place an issue on GitHub.</p>
+        <h2>RDF Conversion</h2>
+        <p>OpenFK v1.3+ supports decoding of the game's RDFv2 files. However the decoding process is not perfect, as there are issues with special characters which return garbled text instead. This can make the in-game text hard to read in localized versions of the game. OpenFK also does not currently implement decoding of RDFv1 files. This means that you will have to manually provide XMLs if you are playing older versions of U.B. Funkeys.</p>
+        <h2>Network Connectivity</h2>
+        <p>OpenFK handles the 'netcommands' function that is required for the game to properly communicate to external servers. However, there are currently no active servers for U.B. Funkeys at the moment. There are projects such as UBFunkeysServer and A1Emu that aim to reimplement the servers, but they are out of the scope for the OpenFK project.</p>
+        </div>
+
+        <footer class="footer">
+            <a href="https://gittymac.github.io/">A project by <img
+                    src='https://github.com/GittyMac/GittyMac/raw/master/Assets/lakowordmark_l.svg' width="128"
+                    style='vertical-align: middle;' /></a>
+        </footer>
     </body>
 </html>

@@ -1,48 +1,57 @@
 <!--OpenFK Help by Lako-->
 <!DOCTYPE html>
 <html>
-    <head>
-        <link rel="icon" href="favicondl.ico" type="image/x-icon" />
-        <title>OpenFK</title>
-        <link rel="stylesheet" href="style.css">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="description" content="OpenFK is an open source replacement for the U.B. Funkeys executable.">
-        <meta property="og:title" content="Download OpenFK" />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://gittymac.github.io/OpenFK/dl.html" />
-        <meta property="og:image" content="https://gittymac.github.io/OpenFK/logodl.png" />
-        <meta property="og:description" content="OpenFK is an open source replacement for the U.B. Funkeys executable." />
-    </head>
 
+<head>
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <title>OpenFK</title>
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="OpenFK is an open source replacement for the U.B. Funkeys executable.">
+    <meta property="og:title" content="Download OpenFK" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://gittymac.github.io/OpenFK/dl.html" />
+    <meta property="og:image" content="https://gittymac.github.io/OpenFK/logo.png" />
+    <meta property="og:description" content="OpenFK is an open source replacement for the U.B. Funkeys executable." />
+</head>
+
+<body>
     <div class="sidenav">
+        <a href="index.html"><img src="logo.svg" width="32px" alt="OpenFK Logo" style='vertical-align: middle;' />
+            <b>OpenFK</b></a>
+        <a> | </a>
         <a href="index.html">Home</a>
-        <a>Downloads</a>
+        <a><b>Downloads</b></a>
         <a href="help.html">Help</a>
         <a href="https://github.com/GittyMac/OpenFK">Github</a>
-      </div>
-
-    <body>
-        <marquee style="padding-top: 10px;" scrollamount="10">OpenFK 2.0 now out!</marquee>
-        <img src="logodl.png" alt="OpenFK Logo with Download Arrow"/>
+    </div>
+    <div class="center">
         <h1>Download OpenFK</h1>
-        <h3>Download OpenFK here! <br> You will need to have the U.B. Funkeys game installed.</h3>
-        <h2>Download Links</h2>
-        <a class="dl" href="https://github.com/GittyMac/OpenFK/releases/download/v2.0/OpenFK.2.0.x64.zip">Download (x64)</a>
-        <p></p>
-        <a class="dl" href="https://github.com/GittyMac/OpenFK/releases/download/v2.0/OpenFK.2.0.x86.zip">Download (x86)</a>
-        <h2>How to Install</h2>
-        <p>
-            OpenFK requires some manual work to set it up fully.<br> Put the contents of the OpenFK release into your RadicaGame folder.
-            <br>You will also need to find the Flash.ocx file, OpenFK will prompt you to download a compatible version if you don't have one. 
-            <br>If it doesn't prompt you, you can download and use the <a href="https://github.com/GittyMac/OpenFK/releases/download/v1.5/FetchOCX.bat" >FetchOCX.bat</a> utility.
-            <br>Be sure to run the 'Configure OpenFK.bat' file to choose from some choices!
-        </p>
-        <h2>How to use USB Support</h2>
-        <p>
-            <strong>To use USB support, you will need to have the MegaByte drivers installed.</strong>
-            <br>Enable USB Support in the OpenFK configuration.
-            <br>Now you can use USB with OpenFK! (customF and USB can work together!)
-            <br><em>Please note USB support currently uses a workaround which can sometimes not work correctly.</em>
-        </p>
-    </body>
+        <p>Select the version of OpenFK you would like to install. If unsure, most Windows 10 PCs and all Windows 11
+            installations would use the x64 version. If you are installing OpenFK on Linux using Wine, use the x86 version
+            due to compatibility issues related to Adobe Flash Player.</p>
+        <a class="imgButton" style="background-color: #66f86e; font-size: 36px;"
+            href="https://github.com/GittyMac/OpenFK/releases/download/v2.0/OpenFK.2.0.x64.zip">Download (x64)</a>
+        <a class="imgButton" style="background-color: #66f86e; font-size: 36px;"
+            href="https://github.com/GittyMac/OpenFK/releases/download/v2.0/OpenFK.2.0.x86.zip">Download (x86)</a>
+        <h2>Installation Instructions</h2>
+        <p>To install OpenFK, you need an existing installation of the U.B. Funkeys game along with .NET Framework 4.5.
+            After downloading the ZIP file, simply extract the contents into the RadicaGame folder of your U.B. Funkeys
+            installation directory. When the extraction process has finished, simply run OpenFK instead of UBFunkeys.exe to
+            play.</p>
+        <h2>Flash.OCX Information</h2>
+        <p>OpenFK, like UBFunkeys.exe, still requires Adobe Flash Player to power the game itself. It however does not
+            require an active installation of Adobe Flash Player, only loading an ActiveX plugin file when opened. Due to
+            Adobe's restriction of redistributing Adobe Flash Player files, OpenFK fetches an OCX file from Windows Update.
+            You will get a pop-up when you first launch OpenFK prompting to fetch a Flash.OCX file. Clicking yes will
+            trigger OpenFK's fetching process, which will result in Flash.OCX being downloaded. After the fetching process,
+            OpenFK will restart and launch the U.B. Funkeys game. For Linux users, you will need to use an OCX from Adobe
+            Flash Player 10 due to Wine compatibility issues.</p>
+    </div>
+    <footer class="footer">
+        <a>A project by <img src='https://github.com/GittyMac/GittyMac/raw/master/Assets/lakowordmark_l.svg' width="128"
+                style='vertical-align: middle;' /></a>
+    </footer>
+</body>
+
 </html>
