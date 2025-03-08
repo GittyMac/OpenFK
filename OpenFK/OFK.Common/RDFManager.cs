@@ -59,7 +59,7 @@ namespace OpenFK
                     if (col[currentCol][i] == character)
                     {
                         ret[pos++] = (char)i;
-                        if (i == (char)0x3E)
+                        if (i == 0x3E)
                         {
                             endchar = pos;
                         }
